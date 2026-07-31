@@ -7,7 +7,7 @@ recorded evidence. Future phases are not implied by directories or plans.
 | Phase | Name | Dependencies | Status | Task range | Evidence |
 |---:|---|---|---|---|---|
 | 1 | Governance and repository bootstrap | None | Complete | DF-01-001..009 | `docs/evidence/phase-01-tool-validation.md` |
-| 2 | Solution skeleton and static quality | 1 | Not started | DF-02-001..009 | None |
+| 2 | Solution skeleton and static quality | 1 | Complete | DF-02-001..009 | `docs/evidence/phase-02-static-quality.md` |
 | 3 | Local platform foundation | 2 | Not started | DF-03-001..009 | None |
 | 4 | Domain primitives and request aggregate | 3 | Not started | DF-04-001..010 | None |
 | 5 | Reference data and evaluation facts | 4 | Not started | DF-05-001..008 | None |
@@ -44,3 +44,17 @@ recorded evidence. Future phases are not implied by directories or plans.
 | DF-01-007 | Complete | Windows and Bash validation scripts |
 | DF-01-008 | Complete | Evidence policy and this phase tracker |
 | DF-01-009 | Complete | Executed tool-validation evidence |
+
+## Phase 2 task checklist
+
+| Task | Status | Acceptance artefact |
+|---|---|---|
+| DF-02-001 | Complete | `DecisionForge.sln`; six backend production projects |
+| DF-02-002 | Complete | Project references and architecture tests |
+| DF-02-003 | Complete | Eight test/support projects; backend test discovery |
+| DF-02-004 | Complete | `src/DecisionForge.Web`; production build |
+| DF-02-005 | Complete | `Directory.Build.props`; deliberate-warning proof |
+| DF-02-006 | Complete | `Directory.Packages.props`; NuGet and npm lock files |
+| DF-02-007 | Complete | `.editorconfig`; TypeScript, ESLint, and Prettier configuration |
+| DF-02-008 | Complete | Architecture policy and forbidden-reference proof |
+| DF-02-009 | Complete | PowerShell and Bash root build/test scripts |

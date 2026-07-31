@@ -1,0 +1,12 @@
+.foundation {
+  max-width: 48rem;
+  margin: auto;
+  padding: 3rem 1.5rem;
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}

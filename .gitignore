@@ -55,6 +55,11 @@ Desktop.ini
 
 # Local implementation brief (not a project artefact)
 /DecisionForge Phase Implementation Prompt.docx
+/Decision_Forge_spec.md
 
 # Generated evidence; reviewed Markdown evidence remains tracked
 docs/evidence/generated/
+
+# Frontend local caches
+.eslintcache
+*.tsbuildinfo

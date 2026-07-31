@@ -118,9 +118,7 @@ Write-Output "git: $(Format-Version -Version $gitVersion)"
 Write-Output "docker: $(Format-Version -Version $dockerVersion)"
 
 if ($failures.Count -gt 0) {
-    Write-Error ("Tool validation failed:`n- " + ($failures -join "`n- "))
-    exit 1
+    throw ("Tool validation failed:`n- " + ($failures -join "`n- "))
 }
 
 Write-Output 'Tool validation passed.'
-exit 0

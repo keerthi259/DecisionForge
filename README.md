@@ -5,9 +5,9 @@ target workflow evaluates a purchase request against an immutable, versioned
 policy, records rule-level evidence, and creates an ordered approval workflow
 when manual review is required.
 
-> Current state: Phase 1 establishes repository governance only. No application,
-> API, database, policy evaluator, user interface, deployment, or product KPI is
-> implemented yet.
+> Current state: Phase 2 establishes the compilable .NET and React solution
+> skeleton with strict static quality. No procurement workflow, database,
+> authentication, policy evaluator, deployment, or product KPI is implemented.
 
 The authoritative implementation specification is [spec.md](spec.md). It
 defines the complete scope, architecture, security boundaries, quality gates,
@@ -18,7 +18,7 @@ and 24-phase Atomic Task Graph.
 | Phase | Name | Status | Evidence |
 |---:|---|---|---|
 | 1 | Governance and repository bootstrap | Complete | `docs/evidence/phase-01-tool-validation.md` |
-| 2 | Solution skeleton and static quality | Not started | None |
+| 2 | Solution skeleton and static quality | Complete | `docs/evidence/phase-02-static-quality.md` |
 | 3 | Local platform foundation | Not started | None |
 | 4 | Domain primitives and request aggregate | Not started | None |
 | 5 | Reference data and evaluation facts | Not started | None |
@@ -76,6 +76,29 @@ deterministic policy evaluator remains isolated from I/O; PostgreSQL is the one
 business database; and the production ASP.NET Core host serves the React build
 from the same origin. [ADR-0001](docs/adr/ADR-0001-modular-monolith.md) records
 the initial architecture decision.
+
+The current project layout and enforced references are documented in
+[docs/architecture/component-view.md](docs/architecture/component-view.md).
+
+## Build and test
+
+After selecting the pinned tools, run the cross-platform baseline scripts:
+
+```powershell
+./scripts/build.ps1
+./scripts/test.ps1
+```
+
+```bash
+./scripts/build.sh
+./scripts/test.sh
+```
+
+These commands use locked dependency restoration. The build script verifies
+formatting, treats backend warnings as errors, and runs frontend formatting,
+lint, strict type checking, and the Vite production build. See
+[docs/testing/testing-strategy.md](docs/testing/testing-strategy.md) for the
+current test scope and explicit future boundaries.
 
 ## Contributing and security
 
