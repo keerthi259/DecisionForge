@@ -1,0 +1,60 @@
+# Build outputs
+[Bb]in/
+[Oo]bj/
+[Dd]ebug*/
+[Rr]elease*/
+artifacts/
+TestResults/
+coverage/
+coverage.*
+*.trx
+*.coverage
+*.coveragexml
+
+# .NET tooling and user state
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.dotnet/
+.store/
+
+# Node and frontend tooling
+node_modules/
+.npm/
+.pnpm-store/
+.yarn/
+dist/
+.vite/
+.turbo/
+playwright-report/
+test-results/
+blob-report/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+appsettings.*.local.json
+secrets.json
+*.pfx
+*.p12
+*.pem
+*.key
+
+# IDEs and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.tmp
+*.bak
+
+# Local implementation brief (not a project artefact)
+/DecisionForge Phase Implementation Prompt.docx
+
+# Generated evidence; reviewed Markdown evidence remains tracked
+docs/evidence/generated/
