@@ -1,10 +1,10 @@
 # Component view
 
-## Current Phase 3 structure
+## Current Phase 4 structure
 
 DecisionForge remains a modular monolith with one planned deployable host.
-Phase 3 adds local platform composition without introducing procurement
-capabilities or persistence mappings.
+Phase 4 adds the framework-independent purchase-request domain without adding
+application use cases, persistence mappings or business API endpoints.
 
 ```mermaid
 flowchart LR
@@ -37,3 +37,9 @@ The React project remains a separately built TypeScript workspace. Vite proxies
 `/api`, `/health` and `/version` during development, so browser requests stay
 same-origin without permissive CORS. Copying production assets into the API host
 remains Phase 17 scope.
+
+Within `DecisionForge.Domain`, common entity/aggregate/event primitives support
+immutable value objects and the `PurchaseRequest` aggregate. The aggregate owns
+its items, state transitions and authoritative total. Architecture tests reject
+framework dependencies, public entity setters and test-only internal access.
+See `domain-model.md` for the implemented domain boundary.

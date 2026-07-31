@@ -5,10 +5,11 @@ target workflow evaluates a purchase request against an immutable, versioned
 policy, records rule-level evidence, and creates an ordered approval workflow
 when manual review is required.
 
-> Current state: Phase 3 provides the local Aspire topology, PostgreSQL and
-> Mailpit resources, Vite-to-API proxy, telemetry defaults and operational
-> health/version endpoints. No procurement workflow, EF model, authentication,
-> policy evaluator, deployment, or product KPI is implemented.
+> Current state: Phase 4 provides the framework-independent purchase-request
+> domain: validated value objects, controlled enums, server-calculated item
+> totals, draft mutations, submission/withdrawal/evaluation-failure state
+> transitions and domain events. Application workflows, persistence, APIs,
+> authentication, policy evaluation and deployment are not implemented.
 
 The authoritative implementation specification is [spec.md](spec.md). It
 defines the complete scope, architecture, security boundaries, quality gates,
@@ -21,7 +22,7 @@ and 24-phase Atomic Task Graph.
 | 1 | Governance and repository bootstrap | Complete | `docs/evidence/phase-01-tool-validation.md` |
 | 2 | Solution skeleton and static quality | Complete | `docs/evidence/phase-02-static-quality.md` |
 | 3 | Local platform foundation | Complete | `docs/evidence/phase-03-local-platform.md` |
-| 4 | Domain primitives and request aggregate | Not started | None |
+| 4 | Domain primitives and request aggregate | Complete | `docs/evidence/phase-04-domain.md` |
 | 5 | Reference data and evaluation facts | Not started | None |
 | 6 | Policy JSON contract and validation | Not started | None |
 | 7 | Deterministic policy engine | Not started | None |
@@ -80,6 +81,8 @@ the initial architecture decision.
 
 The current project layout and enforced references are documented in
 [docs/architecture/component-view.md](docs/architecture/component-view.md).
+The implemented aggregate, value objects, invariants and state transitions are
+documented in [docs/architecture/domain-model.md](docs/architecture/domain-model.md).
 
 ## Build and test
 

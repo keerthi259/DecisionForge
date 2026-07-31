@@ -21,6 +21,12 @@ unreachable TCP endpoint. It verifies HTTP 503 readiness while liveness remains
 HTTP 200. The Phase 3 smoke scripts separately verify the live Aspire-managed
 PostgreSQL resource, Mailpit, API and Vite proxy.
 
+Phase 4 adds domain tests covering all required value-object validation and
+equality rules, controlled enum parsing, money arithmetic and storage
+boundaries, item line totals, aggregate ownership, draft mutation atomicity,
+server-authoritative totals, state-transition denial paths and exact domain
+events. Test builders use only public factories and behaviour.
+
 ## Commands
 
 Run the backend suite and static baseline:
@@ -49,8 +55,19 @@ Run the local topology gate:
 ./scripts/stop-local.sh
 ```
 
-The current baseline is 19 tests across seven discovered assemblies. Coverage
-thresholds, PostgreSQL Testcontainers persistence tests, Playwright,
-accessibility, mutation and performance budgets are introduced and enforced by
-their assigned Atomic Task Graph phases. No metric is claimed before it is
-measured.
+Run the Phase 4 domain coverage gate:
+
+```powershell
+./scripts/domain-coverage.ps1
+```
+
+```bash
+./scripts/domain-coverage.sh
+```
+
+The current baseline is 111 tests across seven discovered assemblies. Domain
+coverage is enforced at 90% line and 85% branch; the verified Phase 4 result is
+96.18% line and 93.28% branch. PostgreSQL Testcontainers persistence tests,
+Playwright, accessibility, mutation and measured performance budgets are
+introduced and enforced by their assigned Atomic Task Graph phases. No metric
+is claimed before it is measured.

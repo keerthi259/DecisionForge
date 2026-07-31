@@ -9,7 +9,7 @@ recorded evidence. Future phases are not implied by directories or plans.
 | 1 | Governance and repository bootstrap | None | Complete | DF-01-001..009 | `docs/evidence/phase-01-tool-validation.md` |
 | 2 | Solution skeleton and static quality | 1 | Complete | DF-02-001..009 | `docs/evidence/phase-02-static-quality.md` |
 | 3 | Local platform foundation | 2 | Complete | DF-03-001..009 | `docs/evidence/phase-03-local-platform.md` |
-| 4 | Domain primitives and request aggregate | 3 | Not started | DF-04-001..010 | None |
+| 4 | Domain primitives and request aggregate | 3 | Complete | DF-04-001..010 | `docs/evidence/phase-04-domain.md` |
 | 5 | Reference data and evaluation facts | 4 | Not started | DF-05-001..008 | None |
 | 6 | Policy JSON contract and validation | 5 | Not started | DF-06-001..010 | None |
 | 7 | Deterministic policy engine | 6 | Not started | DF-07-001..012 | None |
@@ -72,3 +72,18 @@ recorded evidence. Future phases are not implied by directories or plans.
 | DF-03-007 | Complete | Correlation middleware, response header and logging-scope test |
 | DF-03-008 | Complete | Live, ready and version endpoints plus outage regression test |
 | DF-03-009 | Complete | PowerShell/Bash start, smoke and stop scripts |
+
+## Phase 4 task checklist
+
+| Task | Status | Acceptance artefact |
+|---|---|---|
+| DF-04-001 | Complete | Entity, aggregate root, domain event and stable domain-error primitives |
+| DF-04-002 | Complete | Required immutable value objects and boundary/equality/arithmetic tests |
+| DF-04-003 | Complete | Controlled enums and exact-name parser tests |
+| DF-04-004 | Complete | `PurchaseRequestItem` and line-total boundary tests |
+| DF-04-005 | Complete | Deterministic owned draft creation and creation event |
+| DF-04-006 | Complete | Draft metadata/item mutations and server-authoritative totals |
+| DF-04-007 | Complete | Submit, withdraw and evaluation-failure transition matrix |
+| DF-04-008 | Complete | Exact significant-transition domain-event assertions |
+| DF-04-009 | Complete | Public-API test builders and domain architecture tests |
+| DF-04-010 | Complete | Enforced domain coverage: 96.18% line, 93.28% branch |
