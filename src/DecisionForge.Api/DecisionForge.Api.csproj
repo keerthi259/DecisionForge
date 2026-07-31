@@ -5,8 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aspire.Npgsql" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DecisionForge.Application\DecisionForge.Application.csproj" />
     <ProjectReference Include="..\DecisionForge.Infrastructure\DecisionForge.Infrastructure.csproj" />
+    <ProjectReference Include="..\DecisionForge.ServiceDefaults\DecisionForge.ServiceDefaults.csproj" />
   </ItemGroup>
 
 </Project>

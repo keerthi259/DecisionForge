@@ -5,9 +5,10 @@ target workflow evaluates a purchase request against an immutable, versioned
 policy, records rule-level evidence, and creates an ordered approval workflow
 when manual review is required.
 
-> Current state: Phase 2 establishes the compilable .NET and React solution
-> skeleton with strict static quality. No procurement workflow, database,
-> authentication, policy evaluator, deployment, or product KPI is implemented.
+> Current state: Phase 3 provides the local Aspire topology, PostgreSQL and
+> Mailpit resources, Vite-to-API proxy, telemetry defaults and operational
+> health/version endpoints. No procurement workflow, EF model, authentication,
+> policy evaluator, deployment, or product KPI is implemented.
 
 The authoritative implementation specification is [spec.md](spec.md). It
 defines the complete scope, architecture, security boundaries, quality gates,
@@ -19,7 +20,7 @@ and 24-phase Atomic Task Graph.
 |---:|---|---|---|
 | 1 | Governance and repository bootstrap | Complete | `docs/evidence/phase-01-tool-validation.md` |
 | 2 | Solution skeleton and static quality | Complete | `docs/evidence/phase-02-static-quality.md` |
-| 3 | Local platform foundation | Not started | None |
+| 3 | Local platform foundation | Complete | `docs/evidence/phase-03-local-platform.md` |
 | 4 | Domain primitives and request aggregate | Not started | None |
 | 5 | Reference data and evaluation facts | Not started | None |
 | 6 | Policy JSON contract and validation | Not started | None |
@@ -99,6 +100,9 @@ formatting, treats backend warnings as errors, and runs frontend formatting,
 lint, strict type checking, and the Vite production build. See
 [docs/testing/testing-strategy.md](docs/testing/testing-strategy.md) for the
 current test scope and explicit future boundaries.
+
+For one-command local startup and health verification, see
+[docs/operations/local-development.md](docs/operations/local-development.md).
 
 ## Contributing and security
 

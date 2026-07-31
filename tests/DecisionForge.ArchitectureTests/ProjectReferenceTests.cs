@@ -8,21 +8,30 @@ public sealed class ProjectReferenceTests
         new Dictionary<string, string>(StringComparer.Ordinal)
         {
             ["DecisionForge.Api"] = "src/DecisionForge.Api/DecisionForge.Api.csproj",
+            ["DecisionForge.AppHost"] =
+                "src/DecisionForge.AppHost/DecisionForge.AppHost.csproj",
             ["DecisionForge.Application"] =
                 "src/DecisionForge.Application/DecisionForge.Application.csproj",
             ["DecisionForge.Domain"] = "src/DecisionForge.Domain/DecisionForge.Domain.csproj",
             ["DecisionForge.Infrastructure"] =
                 "src/DecisionForge.Infrastructure/DecisionForge.Infrastructure.csproj",
+            ["DecisionForge.ServiceDefaults"] =
+                "src/DecisionForge.ServiceDefaults/DecisionForge.ServiceDefaults.csproj",
         };
 
     private static readonly IReadOnlyDictionary<string, IReadOnlySet<string>> _allowedReferences =
         new Dictionary<string, IReadOnlySet<string>>(StringComparer.Ordinal)
         {
-            ["DecisionForge.Api"] = Set("DecisionForge.Application", "DecisionForge.Infrastructure"),
+            ["DecisionForge.Api"] = Set(
+                "DecisionForge.Application",
+                "DecisionForge.Infrastructure",
+                "DecisionForge.ServiceDefaults"),
+            ["DecisionForge.AppHost"] = Set("DecisionForge.Api"),
             ["DecisionForge.Application"] = Set("DecisionForge.Domain"),
             ["DecisionForge.Domain"] = Set(),
             ["DecisionForge.Infrastructure"] =
                 Set("DecisionForge.Application", "DecisionForge.Domain"),
+            ["DecisionForge.ServiceDefaults"] = Set(),
         };
 
     [Fact]

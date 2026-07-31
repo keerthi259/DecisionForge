@@ -1,33 +1,39 @@
 # Component view
 
-## Current Phase 2 structure
+## Current Phase 3 structure
 
-DecisionForge is a modular monolith with one planned deployable host. Phase 2
-establishes compile-time boundaries only; procurement capabilities begin in
-later phases.
+DecisionForge remains a modular monolith with one planned deployable host.
+Phase 3 adds local platform composition without introducing procurement
+capabilities or persistence mappings.
 
 ```mermaid
 flowchart LR
-  API[DecisionForge.Api] --> APP[DecisionForge.Application]
+  APPHOST[DecisionForge.AppHost] --> API[DecisionForge.Api]
+  APPHOST -. orchestrates .-> POSTGRES[(PostgreSQL)]
+  APPHOST -. orchestrates .-> MAILPIT[Mailpit]
+  APPHOST -. starts .-> WEB[DecisionForge.Web]
+  WEB -. same-origin proxy .-> API
+  API --> APP[DecisionForge.Application]
   API --> INFRA[DecisionForge.Infrastructure]
+  API --> DEFAULTS[DecisionForge.ServiceDefaults]
+  API --> POSTGRES
   INFRA --> APP
   INFRA --> DOMAIN[DecisionForge.Domain]
   APP --> DOMAIN
-
-  APPHOST[DecisionForge.AppHost]
-  DEFAULTS[DecisionForge.ServiceDefaults]
 ```
 
-`DecisionForge.AppHost` and `DecisionForge.ServiceDefaults` deliberately have
-no project references in Phase 2. Phase 3 will configure the Aspire topology and
-shared telemetry/health behavior, at which point the architecture policy and
-diagram must be updated together.
+The business dependency rules remain unchanged: Domain references no solution
+project; Application references Domain only; Infrastructure references
+Application and Domain; API references Application and Infrastructure.
+ServiceDefaults is a technical composition dependency containing telemetry,
+health, service-discovery and HTTP-resilience registration only.
 
-The production dependency rules are tested from both project files and compiled
-assemblies. Domain references no solution project; Application references only
-Domain; Infrastructure references Application and Domain; API references
-Application and Infrastructure.
+AppHost waits for PostgreSQL and Mailpit before starting the API, then waits for
+the API before starting Vite. The API's readiness check uses real Npgsql
+connectivity; liveness is process-only. Architecture tests enforce the complete
+project graph, including the AppHost and ServiceDefaults technical edges.
 
-The React project is a separately built TypeScript workspace during development.
-Copying its production output into the API host is Phase 17 scope and is not
-claimed here.
+The React project remains a separately built TypeScript workspace. Vite proxies
+`/api`, `/health` and `/version` during development, so browser requests stay
+same-origin without permissive CORS. Copying production assets into the API host
+remains Phase 17 scope.

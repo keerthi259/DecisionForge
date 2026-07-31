@@ -8,7 +8,7 @@ recorded evidence. Future phases are not implied by directories or plans.
 |---:|---|---|---|---|---|
 | 1 | Governance and repository bootstrap | None | Complete | DF-01-001..009 | `docs/evidence/phase-01-tool-validation.md` |
 | 2 | Solution skeleton and static quality | 1 | Complete | DF-02-001..009 | `docs/evidence/phase-02-static-quality.md` |
-| 3 | Local platform foundation | 2 | Not started | DF-03-001..009 | None |
+| 3 | Local platform foundation | 2 | Complete | DF-03-001..009 | `docs/evidence/phase-03-local-platform.md` |
 | 4 | Domain primitives and request aggregate | 3 | Not started | DF-04-001..010 | None |
 | 5 | Reference data and evaluation facts | 4 | Not started | DF-05-001..008 | None |
 | 6 | Policy JSON contract and validation | 5 | Not started | DF-06-001..010 | None |
@@ -58,3 +58,17 @@ recorded evidence. Future phases are not implied by directories or plans.
 | DF-02-007 | Complete | `.editorconfig`; TypeScript, ESLint, and Prettier configuration |
 | DF-02-008 | Complete | Architecture policy and forbidden-reference proof |
 | DF-02-009 | Complete | PowerShell and Bash root build/test scripts |
+
+## Phase 3 task checklist
+
+| Task | Status | Acceptance artefact |
+|---|---|---|
+| DF-03-001 | Complete | AppHost PostgreSQL, Mailpit and API resource graph |
+| DF-03-002 | Complete | Aspire-managed Vite server and same-origin proxy smoke |
+| DF-03-003 | Complete | ServiceDefaults OpenTelemetry, health, discovery and resilience |
+| DF-03-004 | Complete | Validated `PlatformOptions` and negative startup test |
+| DF-03-005 | Complete | Injectable `TimeProvider`, ID generator and correlation context |
+| DF-03-006 | Complete | `.env.example` and local secret guidance |
+| DF-03-007 | Complete | Correlation middleware, response header and logging-scope test |
+| DF-03-008 | Complete | Live, ready and version endpoints plus outage regression test |
+| DF-03-009 | Complete | PowerShell/Bash start, smoke and stop scripts |

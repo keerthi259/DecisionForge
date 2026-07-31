@@ -14,7 +14,11 @@ public sealed class ProjectBaselineTests
 
         Assert.Equal("net10.0", project.TargetFramework);
         Assert.Equal(
-            ["DecisionForge.Application", "DecisionForge.Infrastructure"],
+            [
+                "DecisionForge.Application",
+                "DecisionForge.Infrastructure",
+                "DecisionForge.ServiceDefaults",
+            ],
             project.ProjectReferences);
     }
 }
