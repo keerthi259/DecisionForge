@@ -10,7 +10,7 @@ recorded evidence. Future phases are not implied by directories or plans.
 | 2 | Solution skeleton and static quality | 1 | Complete | DF-02-001..009 | `docs/evidence/phase-02-static-quality.md` |
 | 3 | Local platform foundation | 2 | Complete | DF-03-001..009 | `docs/evidence/phase-03-local-platform.md` |
 | 4 | Domain primitives and request aggregate | 3 | Complete | DF-04-001..010 | `docs/evidence/phase-04-domain.md` |
-| 5 | Reference data and evaluation facts | 4 | Not started | DF-05-001..008 | None |
+| 5 | Reference data and evaluation facts | 4 | Complete | DF-05-001..008 | `docs/evidence/phase-05-reference-data.md` |
 | 6 | Policy JSON contract and validation | 5 | Not started | DF-06-001..010 | None |
 | 7 | Deterministic policy engine | 6 | Not started | DF-07-001..012 | None |
 | 8 | Policy lifecycle and versioning | 7 | Not started | DF-08-001..009 | None |
@@ -87,3 +87,16 @@ recorded evidence. Future phases are not implied by directories or plans.
 | DF-04-008 | Complete | Exact significant-transition domain-event assertions |
 | DF-04-009 | Complete | Public-API test builders and domain architecture tests |
 | DF-04-010 | Complete | Enforced domain coverage: 96.18% line, 93.28% branch |
+
+## Phase 5 task checklist
+
+| Task | Status | Acceptance artefact |
+|---|---|---|
+| DF-05-001 | Complete | Department aggregate invariants and code/threshold/activation tests |
+| DF-05-002 | Complete | Supplier aggregate invariants and registration/status/risk tests |
+| DF-05-003 | Complete | Four specific, cancellation-aware repository/query ports; architecture guard |
+| DF-05-004 | Complete | Department/supplier management commands, stable errors and orchestration tests |
+| DF-05-005 | Complete | Non-forgeable immutable snapshot containing exactly sixteen approved fact paths |
+| DF-05-006 | Complete | Deterministic technology and urgency derivation with golden/boundary tests |
+| DF-05-007 | Complete | Six controlled reference-data domain-event types and payload assertions |
+| DF-05-008 | Complete | Inactive, mismatched, currency, date, empty and overflow edge matrix |

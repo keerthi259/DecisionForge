@@ -1,15 +1,18 @@
 # Domain model
 
-## Phase 4 boundary
+## Phase 5 boundary
 
 `DecisionForge.Domain` contains procurement state and rules only. It references
 no other solution project and has no ASP.NET Core, EF Core, Npgsql or dependency
-injection dependency. Application use cases, reference-data entities, policy
-evaluation, persistence and API contracts belong to later phases.
+injection dependency. Phase 5 adds reference-data aggregates and the policy-fact
+boundary. Policy parsing/evaluation, persistence and API contracts remain later
+phases.
 
 ```mermaid
 classDiagram
   AggregateRoot <|-- PurchaseRequest
+  AggregateRoot <|-- Department
+  AggregateRoot <|-- Supplier
   Entity <|-- AggregateRoot
   Entity <|-- PurchaseRequestItem
   PurchaseRequest "1" *-- "0..*" PurchaseRequestItem
@@ -19,8 +22,42 @@ classDiagram
   PurchaseRequest --> Money
   PurchaseRequestItem --> Money
   PurchaseRequestItem --> ProcurementCategory
+  EvaluationFactSnapshot --> PurchaseRequest
+  EvaluationFactSnapshot --> Department
+  EvaluationFactSnapshot --> Supplier
   AggregateRoot --> IDomainEvent
 ```
+
+## Reference data
+
+`Department` has an immutable normalized code, bounded name, non-negative money
+threshold, active flag and optimistic concurrency token. `Supplier` has an
+immutable normalized registration number, bounded name, controlled approval,
+onboarding and risk states, active flag and concurrency token. Onboarding is
+modeled independently from approval using `NotStarted`, `InProgress`,
+`Completed` and `Suspended`, so a suspended onboarding condition is not
+conflated with the supplier's commercial approval state.
+
+Creation is active by default. Detail and activation mutations require the
+current token, a distinct caller-supplied next token and a monotonic UTC time.
+Stale tokens return `domain.concurrency-conflict`; repeating the current active
+state returns `domain.invalid-state`. Codes and registration numbers cannot be
+changed. Application services use injected `TimeProvider` and `IIdGenerator`
+and persist only successful state changes.
+
+## Evaluation facts
+
+`EvaluationFactSnapshot.Create` is the sole public construction path. It joins
+a request to matching active reference aggregates, rejects currency mismatch,
+past delivery dates, missing items and item-count overflow, then copies exactly
+the approved request, department, supplier and derived fact paths. Fact records
+have no public constructors or setters, preventing policy consumers from
+forging or mutating inputs.
+
+Technology is derived from software, hardware or cloud-service line items.
+Urgency exception is derived from urgent or emergency requests. A request with
+one line category exposes that category; a mixed-category request exposes the
+controlled `Other` category while technology remains independently derived.
 
 ## Request aggregate
 
@@ -80,4 +117,5 @@ The required value objects are immutable and construction-validated:
 `Money` is non-negative, has at most two decimal places, is bounded to
 `numeric(18,2)`, and rejects mixed-currency or overflowing arithmetic. Domain
 failures expose stable codes for validation, invalid state, missing/duplicate
-entities, currency mismatch and amount overflow.
+entities, currency mismatch, amount overflow, optimistic-concurrency conflict,
+inactive reference and reference mismatch.

@@ -16,6 +16,7 @@ public sealed class ControlledEnumParserTests
         AssertEveryNameParses<Urgency>();
         AssertEveryNameParses<DataSensitivity>();
         AssertEveryNameParses<SupplierApprovalStatus>();
+        AssertEveryNameParses<SupplierOnboardingStatus>();
         AssertEveryNameParses<SupplierRiskRating>();
     }
 

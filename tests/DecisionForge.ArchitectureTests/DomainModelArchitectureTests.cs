@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using DecisionForge.Domain;
 using DecisionForge.Domain.Common;
 using DecisionForge.Domain.PurchaseRequests;
+using DecisionForge.Domain.ReferenceData;
 using NetArchTest.Rules;
 
 namespace DecisionForge.ArchitectureTests;
@@ -57,6 +58,8 @@ public sealed class DomainModelArchitectureTests
     {
         Assert.True(typeof(PurchaseRequest).IsSealed);
         Assert.True(typeof(PurchaseRequestItem).IsSealed);
+        Assert.True(typeof(Department).IsSealed);
+        Assert.True(typeof(Supplier).IsSealed);
     }
 
     [Fact]
