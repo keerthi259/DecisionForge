@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "1.0",
+  "policyCode": "DUPLICATE-RULE",
+  "name": "Duplicate rule identifiers",
+  "defaultOutcome": {
+    "disposition": "AutoApproved",
+    "reasonCode": "DEFAULT",
+    "message": "Default outcome."
+  },
+  "rules": [
+    {
+      "id": "DUPLICATE",
+      "priority": 1,
+      "when": {
+        "fact": "supplier.isActive",
+        "operator": "equals",
+        "value": true
+      },
+      "then": {
+        "disposition": "Rejected",
+        "reasonCode": "FIRST",
+        "message": "First rule."
+      }
+    },
+    {
+      "id": "duplicate",
+      "priority": 2,
+      "when": {
+        "fact": "supplier.isActive",
+        "operator": "equals",
+        "value": false
+      },
+      "then": {
+        "disposition": "Rejected",
+        "reasonCode": "SECOND",
+        "message": "Second rule."
+      }
+    }
+  ]
+}

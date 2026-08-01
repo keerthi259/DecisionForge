@@ -11,8 +11,8 @@ recorded evidence. Future phases are not implied by directories or plans.
 | 3 | Local platform foundation | 2 | Complete | DF-03-001..009 | `docs/evidence/phase-03-local-platform.md` |
 | 4 | Domain primitives and request aggregate | 3 | Complete | DF-04-001..010 | `docs/evidence/phase-04-domain.md` |
 | 5 | Reference data and evaluation facts | 4 | Complete | DF-05-001..008 | `docs/evidence/phase-05-reference-data.md` |
-| 6 | Policy JSON contract and validation | 5 | Not started | DF-06-001..010 | None |
-| 7 | Deterministic policy engine | 6 | Not started | DF-07-001..012 | None |
+| 6 | Policy JSON contract and validation | 5 | Complete | DF-06-001..010 | `docs/evidence/phase-06-policy-json.md` |
+| 7 | Deterministic policy engine | 6 | Complete | DF-07-001..012 | `docs/evidence/phase-07-policy-engine.md` |
 | 8 | Policy lifecycle and versioning | 7 | Not started | DF-08-001..009 | None |
 | 9 | Purchase-request application lifecycle | 5 | Not started | DF-09-001..008 | None |
 | 10 | Decision orchestration and reproduction | 8, 9 | Not started | DF-10-001..009 | None |
@@ -100,3 +100,35 @@ recorded evidence. Future phases are not implied by directories or plans.
 | DF-05-006 | Complete | Deterministic technology and urgency derivation with golden/boundary tests |
 | DF-05-007 | Complete | Six controlled reference-data domain-event types and payload assertions |
 | DF-05-008 | Complete | Inactive, mismatched, currency, date, empty and overflow edge matrix |
+
+## Phase 6 task checklist
+
+| Task | Status | Acceptance artefact |
+|---|---|---|
+| DF-06-001 | Complete | Immutable schema, rule, condition, value and outcome contracts |
+| DF-06-002 | Complete | Closed comparison, membership, existence, all, any and not AST with invalid-shape tests |
+| DF-06-003 | Complete | Immutable metadata for exactly sixteen approved fact paths and allowed operators |
+| DF-06-004 | Complete | Strict bounded parser with duplicate, unknown and malformed-input tests |
+| DF-06-005 | Complete | Structural and semantic invalid-policy matrix |
+| DF-06-006 | Complete | Exact size, count, depth, collection and text boundary tests |
+| DF-06-007 | Complete | Fixed canonical serializer, invariant numbers and golden SHA-256 checksum |
+| DF-06-008 | Complete | Safe normalized path/code/severity/message validation errors |
+| DF-06-009 | Complete | Complete valid fixture, invalid fixtures and FsCheck properties |
+| DF-06-010 | Complete | `policy-contract.md` and ADR-0002 schema-version policy |
+
+## Phase 7 task checklist
+
+| Task | Status | Acceptance artefact |
+|---|---|---|
+| DF-07-001 | Complete | Closed typed fact set and immutable access trace; unknown/missing fact tests |
+| DF-07-002 | Complete | Exact equality and numeric operator boundary matrix |
+| DF-07-003 | Complete | Membership, contains and existence semantics and tests |
+| DF-07-004 | Complete | Recursive all/any/not evaluator and exact depth guard |
+| DF-07-005 | Complete | Priority/ordinal rule ordering and complete per-rule trace |
+| DF-07-006 | Complete | Rejected/manual/default precedence and FsCheck property |
+| DF-07-007 | Complete | Fixed role ordering and deterministic reason de-duplication |
+| DF-07-008 | Complete | Immutable result, canonical input checksum and full-trace checksum |
+| DF-07-009 | Complete | Rule/node cancellation and bounded total condition evaluation |
+| DF-07-010 | Complete | Golden scenario matrix and three 100-case FsCheck properties |
+| DF-07-011 | Complete | 2.470 ms p95; 87.04% overall and 90.12% critical mutation scores |
+| DF-07-012 | Complete | `policy-contract.md` algorithm and safe failure semantics |

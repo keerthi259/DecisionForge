@@ -1,0 +1,104 @@
+{
+  "schemaVersion": "1.0",
+  "policyCode": "PROCUREMENT-GLOBAL",
+  "name": "Global Procurement Policy",
+  "defaultOutcome": {
+    "disposition": "AutoApproved",
+    "reasonCode": "STANDARD_REQUEST",
+    "message": "The request satisfies the standard procurement policy."
+  },
+  "rules": [
+    {
+      "id": "HIGH-VALUE-URGENT",
+      "priority": 10,
+      "when": {
+        "all": [
+          {
+            "fact": "request.totalAmount",
+            "operator": "greaterThan",
+            "value": 500000
+          },
+          {
+            "fact": "request.urgency",
+            "operator": "in",
+            "value": ["Urgent", "Emergency"]
+          }
+        ]
+      },
+      "then": {
+        "disposition": "ManualApprovalRequired",
+        "requiredApproverRoles": ["FinanceApprover", "SeniorApprover"],
+        "reasonCode": "HIGH_VALUE_URGENT",
+        "message": "High-value urgent requests require finance and senior review."
+      }
+    },
+    {
+      "id": "SECURITY-REVIEW",
+      "priority": 20,
+      "when": {
+        "any": [
+          {
+            "fact": "derived.containsTechnologyPurchase",
+            "operator": "equals",
+            "value": true
+          },
+          {
+            "fact": "request.dataSensitivity",
+            "operator": "equals",
+            "value": "Restricted"
+          }
+        ]
+      },
+      "then": {
+        "disposition": "ManualApprovalRequired",
+        "requiredApproverRoles": ["SecurityApprover"],
+        "reasonCode": "SECURITY_REVIEW",
+        "message": "Technology or restricted data requires security review."
+      }
+    },
+    {
+      "id": "UNAPPROVED-SUPPLIER",
+      "priority": 30,
+      "when": {
+        "not": {
+          "fact": "supplier.isApproved",
+          "operator": "equals",
+          "value": true
+        }
+      },
+      "then": {
+        "disposition": "ManualApprovalRequired",
+        "requiredApproverRoles": ["ProcurementApprover"],
+        "reasonCode": "SUPPLIER_REVIEW",
+        "message": "An unapproved supplier requires procurement review."
+      }
+    },
+    {
+      "id": "JUSTIFICATION-PRESENT",
+      "priority": 40,
+      "when": {
+        "fact": "request.hasBusinessJustification",
+        "operator": "exists"
+      },
+      "then": {
+        "disposition": "AutoApproved",
+        "reasonCode": "JUSTIFICATION_RECORDED",
+        "message": "A business justification is recorded."
+      }
+    },
+    {
+      "id": "SUPPORTED-CURRENCY",
+      "priority": 50,
+      "when": {
+        "fact": "request.currency",
+        "operator": "contains",
+        "value": "INR"
+      },
+      "then": {
+        "disposition": "AutoApproved",
+        "reasonCode": "SUPPORTED_CURRENCY",
+        "message": "The request uses a supported currency."
+      }
+    }
+  ]
+}

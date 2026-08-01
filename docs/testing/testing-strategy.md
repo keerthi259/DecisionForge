@@ -32,6 +32,22 @@ tests using hand-written specific ports; golden fact-snapshot and derived-fact
 tests; inactive, mismatched and boundary cases; cancellation tests; and
 architecture checks for fact-path and repository constraints.
 
+Phase 6 adds strict parser and semantic-validation matrices; every approved
+fact and operator; all closed AST shapes; exact size, depth, count and text
+limits; normalized-error abuse cases; valid and invalid JSON fixtures; a golden
+canonical checksum; culture-independent round trips; and FsCheck properties
+for canonicalization stability and malformed-input safety. Architecture tests
+enforce immutable sealed policy contracts and the absence of executable-policy
+technology dependencies.
+
+Phase 7 adds typed fact access, every comparison/membership/existence operator,
+recursive condition trees, exact depth and total-execution limits, complete
+rule/access traces, precedence, ordered role/reason de-duplication, immutable
+result/checksum golden scenarios, cancellation and three 100-case FsCheck
+properties. BenchmarkDotNet exercises the maximum 100-rule policy, while
+Stryker separately enforces the overall evaluator and critical
+operator/precedence mutation thresholds.
+
 ## Commands
 
 Run the backend suite and static baseline:
@@ -65,17 +81,28 @@ Run the changed-project coverage gates:
 ```powershell
 ./scripts/domain-coverage.ps1
 ./scripts/application-coverage.ps1
+./scripts/policy-coverage.ps1
+./scripts/policy-engine-coverage.ps1
+./scripts/policy-benchmark.ps1
+./scripts/policy-mutation.ps1
 ```
 
 ```bash
 ./scripts/domain-coverage.sh
 ./scripts/application-coverage.sh
+./scripts/policy-coverage.sh
+./scripts/policy-engine-coverage.sh
+./scripts/policy-benchmark.sh
+./scripts/policy-mutation.sh
 ```
 
-The current baseline is 174 tests across seven discovered assemblies, with no
-skips. Domain coverage is enforced at 90% line and 85% branch; Application at
-85% line and 80% branch. The verified Phase 5 results are 97.95%/94.08% for
-Domain and 94.02%/100.00% for Application. PostgreSQL Testcontainers reference
-mappings, Playwright, accessibility, mutation and measured performance budgets
-are introduced and enforced by their assigned Atomic Task Graph phases. No
-metric is claimed before it is measured.
+Domain coverage is enforced at 90% line and 85% branch; Application at 85%
+line and 80% branch; and the Phase 6 policy namespace at 95% line and 90%
+branch. The verified focused Phase 6 policy result is 95.14% line and 92.16%
+branch. Phase 7 independently enforces 95% line and 90% branch for the evaluator,
+75% overall evaluator mutation, 85% critical operator/precedence mutation and a
+100-rule p95 latency below 50 milliseconds. The verified Phase 7 results are
+96.38% line, 90.00% branch, 87.04% overall mutation, 90.12% critical mutation
+and 2.470 ms p95. PostgreSQL Testcontainers reference
+mappings, Playwright and accessibility remain assigned to later Atomic Task
+Graph phases. No metric is claimed before it is measured.

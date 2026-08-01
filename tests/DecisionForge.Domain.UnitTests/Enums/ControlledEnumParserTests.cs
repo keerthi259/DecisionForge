@@ -1,5 +1,6 @@
 using DecisionForge.Domain.Common;
 using DecisionForge.Domain.Enums;
+using DecisionForge.Domain.Policies;
 
 namespace DecisionForge.Domain.UnitTests.Enums;
 
@@ -18,6 +19,7 @@ public sealed class ControlledEnumParserTests
         AssertEveryNameParses<SupplierApprovalStatus>();
         AssertEveryNameParses<SupplierOnboardingStatus>();
         AssertEveryNameParses<SupplierRiskRating>();
+        AssertEveryNameParses<PolicyApproverRole>();
     }
 
     [Theory]

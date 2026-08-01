@@ -5,11 +5,11 @@ target workflow evaluates a purchase request against an immutable, versioned
 policy, records rule-level evidence, and creates an ordered approval workflow
 when manual review is required.
 
-> Current state: Phase 5 adds validated department and supplier aggregates,
-> optimistic concurrency, controlled reference-data events, specific
-> repository/query ports, management commands and immutable evaluation-fact
-> snapshots. Persistence, business APIs, authentication, policy parsing and
-> evaluation, and deployment are not implemented.
+> Current state: Phase 7 adds deterministic typed policy evaluation, complete
+> rule/condition/fact-access traces, precedence and ordered de-duplication,
+> immutable results, cancellation and execution guards, and reproducible input
+> and trace SHA-256 checksums. Policy lifecycle, persistence, business APIs,
+> authentication, and deployment are not implemented.
 
 The authoritative implementation specification is [spec.md](spec.md). It
 defines the complete scope, architecture, security boundaries, quality gates,
@@ -24,8 +24,8 @@ and 24-phase Atomic Task Graph.
 | 3 | Local platform foundation | Complete | `docs/evidence/phase-03-local-platform.md` |
 | 4 | Domain primitives and request aggregate | Complete | `docs/evidence/phase-04-domain.md` |
 | 5 | Reference data and evaluation facts | Complete | `docs/evidence/phase-05-reference-data.md` |
-| 6 | Policy JSON contract and validation | Not started | None |
-| 7 | Deterministic policy engine | Not started | None |
+| 6 | Policy JSON contract and validation | Complete | `docs/evidence/phase-06-policy-json.md` |
+| 7 | Deterministic policy engine | Complete | `docs/evidence/phase-07-policy-engine.md` |
 | 8 | Policy lifecycle and versioning | Not started | None |
 | 9 | Purchase-request application lifecycle | Not started | None |
 | 10 | Decision orchestration and reproduction | Not started | None |
@@ -83,6 +83,9 @@ The current project layout and enforced references are documented in
 [docs/architecture/component-view.md](docs/architecture/component-view.md).
 The implemented aggregate, value objects, invariants and state transitions are
 documented in [docs/architecture/domain-model.md](docs/architecture/domain-model.md).
+The supported policy shape, limits, schema-version policy and canonical form
+are documented in
+[docs/architecture/policy-contract.md](docs/architecture/policy-contract.md).
 
 ## Build and test
 

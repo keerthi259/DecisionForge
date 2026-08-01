@@ -1,12 +1,14 @@
 # Domain model
 
-## Phase 5 boundary
+## Phase 7 boundary
 
 `DecisionForge.Domain` contains procurement state and rules only. It references
 no other solution project and has no ASP.NET Core, EF Core, Npgsql or dependency
 injection dependency. Phase 5 adds reference-data aggregates and the policy-fact
-boundary. Policy parsing/evaluation, persistence and API contracts remain later
-phases.
+boundary. Phase 6 adds strict policy parsing, an immutable policy AST,
+validation and canonical policy checksums. Phase 7 adds typed facts, a pure
+deterministic evaluator, immutable explanation traces and result checksums.
+Policy lifecycle, persistence and API contracts remain later phases.
 
 ```mermaid
 classDiagram

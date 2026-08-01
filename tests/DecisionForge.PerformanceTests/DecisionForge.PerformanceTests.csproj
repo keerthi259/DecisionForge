@@ -2,11 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <StartupObject>DecisionForge.PerformanceTests.Program</StartupObject>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" />
     <PackageReference Include="coverlet.collector" PrivateAssets="all" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="xunit" />
@@ -14,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\DecisionForge.Domain\DecisionForge.Domain.csproj" />
     <ProjectReference Include="..\..\src\DecisionForge.Application\DecisionForge.Application.csproj" />
     <ProjectReference Include="..\DecisionForge.Testing\DecisionForge.Testing.csproj" />
   </ItemGroup>

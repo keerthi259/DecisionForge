@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1.0",
+  "policyCode": "INVALID-PROPERTY",
+  "name": "Unknown property",
+  "execute": "never",
+  "defaultOutcome": {
+    "disposition": "AutoApproved",
+    "reasonCode": "DEFAULT",
+    "message": "Default outcome."
+  },
+  "rules": []
+}

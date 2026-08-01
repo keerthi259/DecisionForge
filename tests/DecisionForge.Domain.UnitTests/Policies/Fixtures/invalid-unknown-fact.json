@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0",
+  "policyCode": "INVALID-FACT",
+  "name": "Unknown fact",
+  "defaultOutcome": {
+    "disposition": "AutoApproved",
+    "reasonCode": "DEFAULT",
+    "message": "Default outcome."
+  },
+  "rules": [
+    {
+      "id": "UNKNOWN-FACT",
+      "priority": 1,
+      "when": {
+        "fact": "request.secretInternalValue",
+        "operator": "equals",
+        "value": true
+      },
+      "then": {
+        "disposition": "Rejected",
+        "reasonCode": "UNKNOWN",
+        "message": "This fixture must fail."
+      }
+    }
+  ]
+}

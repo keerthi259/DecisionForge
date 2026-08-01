@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0",
+  "policyCode": "INVALID-TYPE",
+  "name": "Invalid value type",
+  "defaultOutcome": {
+    "disposition": "AutoApproved",
+    "reasonCode": "DEFAULT",
+    "message": "Default outcome."
+  },
+  "rules": [
+    {
+      "id": "AMOUNT-AS-TEXT",
+      "priority": 1,
+      "when": {
+        "fact": "request.totalAmount",
+        "operator": "greaterThan",
+        "value": "500000"
+      },
+      "then": {
+        "disposition": "Rejected",
+        "reasonCode": "INVALID",
+        "message": "This fixture must fail."
+      }
+    }
+  ]
+}

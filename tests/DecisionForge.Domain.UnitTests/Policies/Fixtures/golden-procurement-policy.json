@@ -1,0 +1,144 @@
+{
+  "schemaVersion": "1.0",
+  "policyCode": "PROCUREMENT-GOLDEN",
+  "name": "Golden procurement policy",
+  "defaultOutcome": {
+    "disposition": "AutoApproved",
+    "reasonCode": "STANDARD_REQUEST",
+    "message": "The request satisfies the standard procurement policy."
+  },
+  "rules": [
+    {
+      "id": "MISSING-JUSTIFICATION",
+      "priority": 5,
+      "when": {
+        "fact": "request.hasBusinessJustification",
+        "operator": "equals",
+        "value": false
+      },
+      "then": {
+        "disposition": "Rejected",
+        "reasonCode": "JUSTIFICATION_REQUIRED",
+        "message": "A business justification is required."
+      }
+    },
+    {
+      "id": "SUSPENDED-SUPPLIER",
+      "priority": 10,
+      "when": {
+        "fact": "supplier.onboardingStatus",
+        "operator": "equals",
+        "value": "Suspended"
+      },
+      "then": {
+        "disposition": "Rejected",
+        "reasonCode": "SUPPLIER_SUSPENDED",
+        "message": "The selected supplier is suspended."
+      }
+    },
+    {
+      "id": "CRITICAL-RISK",
+      "priority": 20,
+      "when": {
+        "fact": "supplier.riskRating",
+        "operator": "equals",
+        "value": "Critical"
+      },
+      "then": {
+        "disposition": "Rejected",
+        "reasonCode": "SUPPLIER_CRITICAL_RISK",
+        "message": "The selected supplier has critical risk."
+      }
+    },
+    {
+      "id": "PENDING-SUPPLIER",
+      "priority": 100,
+      "when": {
+        "fact": "supplier.isApproved",
+        "operator": "equals",
+        "value": false
+      },
+      "then": {
+        "disposition": "ManualApprovalRequired",
+        "requiredApproverRoles": ["ProcurementApprover"],
+        "reasonCode": "PROCUREMENT_REVIEW",
+        "message": "A supplier that is not approved requires procurement review."
+      }
+    },
+    {
+      "id": "TECHNOLOGY-REVIEW",
+      "priority": 110,
+      "when": {
+        "fact": "derived.containsTechnologyPurchase",
+        "operator": "equals",
+        "value": true
+      },
+      "then": {
+        "disposition": "ManualApprovalRequired",
+        "requiredApproverRoles": ["SecurityApprover"],
+        "reasonCode": "SECURITY_REVIEW",
+        "message": "The request requires information-security review."
+      }
+    },
+    {
+      "id": "RESTRICTED-DATA",
+      "priority": 120,
+      "when": {
+        "fact": "request.dataSensitivity",
+        "operator": "equals",
+        "value": "Restricted"
+      },
+      "then": {
+        "disposition": "ManualApprovalRequired",
+        "requiredApproverRoles": ["SecurityApprover"],
+        "reasonCode": "SECURITY_REVIEW",
+        "message": "The request requires information-security review."
+      }
+    },
+    {
+      "id": "FINANCE-REVIEW",
+      "priority": 130,
+      "when": {
+        "fact": "request.totalAmount",
+        "operator": "greaterThan",
+        "value": 500000
+      },
+      "then": {
+        "disposition": "ManualApprovalRequired",
+        "requiredApproverRoles": ["FinanceApprover"],
+        "reasonCode": "FINANCE_REVIEW",
+        "message": "The request exceeds the finance review threshold."
+      }
+    },
+    {
+      "id": "SENIOR-REVIEW",
+      "priority": 140,
+      "when": {
+        "fact": "request.totalAmount",
+        "operator": "greaterThan",
+        "value": 2000000
+      },
+      "then": {
+        "disposition": "ManualApprovalRequired",
+        "requiredApproverRoles": ["SeniorApprover"],
+        "reasonCode": "SENIOR_REVIEW",
+        "message": "The request requires senior-management review."
+      }
+    },
+    {
+      "id": "EMERGENCY-EXCEPTION",
+      "priority": 150,
+      "when": {
+        "fact": "request.urgency",
+        "operator": "equals",
+        "value": "Emergency"
+      },
+      "then": {
+        "disposition": "ManualApprovalRequired",
+        "requiredApproverRoles": ["DepartmentApprover"],
+        "reasonCode": "EMERGENCY_EXCEPTION",
+        "message": "Emergency procurement requires department approval."
+      }
+    }
+  ]
+}

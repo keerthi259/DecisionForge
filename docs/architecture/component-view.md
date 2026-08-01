@@ -1,6 +1,6 @@
 # Component view
 
-## Current Phase 5 structure
+## Current Phase 7 structure
 
 DecisionForge remains a modular monolith with one planned deployable host.
 Phase 5 adds framework-independent reference aggregates and evaluation facts,
@@ -47,4 +47,10 @@ and separate department/supplier repository and active-query ports. No generic
 repository exists. Infrastructure implementations remain Phase 15 scope.
 Architecture tests reject framework dependencies, public entity setters,
 forgeable fact records, extra fact paths and incomplete port cancellation.
-See `domain-model.md` for the implemented domain boundary.
+Phase 7 keeps the strict policy reader, immutable AST, typed fact set,
+deterministic evaluator, semantic validator and canonical serializers entirely
+inside `DecisionForge.Domain`. The evaluator performs no I/O and has no clock,
+randomness, executable expression, scripting, reflection or persistence
+dependency. Architecture tests enforce its closed immutable result and trace
+surface. See `domain-model.md` for the aggregate boundary and
+`policy-contract.md` for the JSON and evaluation contract.
