@@ -13,13 +13,13 @@ recorded evidence. Future phases are not implied by directories or plans.
 | 5 | Reference data and evaluation facts | 4 | Complete | DF-05-001..008 | `docs/evidence/phase-05-reference-data.md` |
 | 6 | Policy JSON contract and validation | 5 | Complete | DF-06-001..010 | `docs/evidence/phase-06-policy-json.md` |
 | 7 | Deterministic policy engine | 6 | Complete | DF-07-001..012 | `docs/evidence/phase-07-policy-engine.md` |
-| 8 | Policy lifecycle and versioning | 7 | Not started | DF-08-001..009 | None |
-| 9 | Purchase-request application lifecycle | 5 | Not started | DF-09-001..008 | None |
-| 10 | Decision orchestration and reproduction | 8, 9 | Not started | DF-10-001..009 | None |
-| 11 | Approval workflow | 10 | Not started | DF-11-001..009 | None |
-| 12 | Audit, outbox and notifications | 11 | Not started | DF-12-001..010 | None |
-| 13 | Identity and resource authorization | 12 | Not started | DF-13-001..010 | None |
-| 14 | API foundation and cross-cutting behaviour | 13 | Not started | DF-14-001..012 | None |
+| 8 | Policy lifecycle and versioning | 7 | Complete | DF-08-001..009 | `docs/evidence/phase-08-policy-lifecycle.md` |
+| 9 | Purchase-request application lifecycle | 5 | Complete | DF-09-001..008 | `docs/evidence/phase-09-request-lifecycle.md` |
+| 10 | Decision orchestration and reproduction | 8, 9 | Complete | DF-10-001..009 | `docs/evidence/phase-10-decision-orchestration.md` |
+| 11 | Approval workflow | 10 | Complete | DF-11-001..009 | `docs/evidence/phase-11-approval-workflow.md` |
+| 12 | Audit, outbox and notifications | 11 | Complete | DF-12-001..010 | `docs/evidence/phase-12-audit-outbox-notifications.md` |
+| 13 | Identity and resource authorization | 12 | Complete | DF-13-001..010 | `docs/evidence/phase-13-identity-authorization.md` |
+| 14 | API foundation and cross-cutting behaviour | 13 | Complete | DF-14-001..012 | `docs/evidence/phase-14-api-foundation.md` |
 | 15 | PostgreSQL persistence and business APIs | 14 | Not started | DF-15-001..012 | None |
 | 16 | Simulation, dashboard and exports | 15 | Not started | DF-16-001..010 | None |
 | 17 | Frontend foundation and authentication | 16 | Not started | DF-17-001..010 | None |
@@ -132,3 +132,105 @@ recorded evidence. Future phases are not implied by directories or plans.
 | DF-07-010 | Complete | Golden scenario matrix and three 100-case FsCheck properties |
 | DF-07-011 | Complete | 2.470 ms p95; 87.04% overall and 90.12% critical mutation scores |
 | DF-07-012 | Complete | `policy-contract.md` algorithm and safe failure semantics |
+
+## Phase 8 task checklist
+
+| Task | Status | Acceptance artefact |
+|---|---|---|
+| DF-08-001 | Complete | `Policy` aggregate and owned validation-aware draft `PolicyVersion` |
+| DF-08-002 | Complete | Aggregate-token serialization and monotonic next-version allocation |
+| DF-08-003 | Complete | Exact draft-text retention and canonical checksum refresh |
+| DF-08-004 | Complete | Validation and identity-gated publication |
+| DF-08-005 | Complete | Published/retired definition immutability matrix |
+| DF-08-006 | Complete | UTC half-open range overlap and retirement boundary matrix |
+| DF-08-007 | Complete | Ordered added/removed rules and structured modification flags |
+| DF-08-008 | Complete | Specific repository/query ports and seven application use cases |
+| DF-08-009 | Complete | Five lifecycle events, safe audit mappings and complete lifecycle matrix |
+
+## Phase 9 task checklist
+
+| Task | Status | Acceptance artefact |
+|---|---|---|
+| DF-09-001 | Complete | Specific requester-scoped repository/query and request-number ports |
+| DF-09-002 | Complete | Trusted-context create/update use cases with no ownership input field |
+| DF-09-003 | Complete | Add/update/remove item commands and aggregate-calculated totals |
+| DF-09-004 | Complete | Owner-scoped list/detail projections and page-size/sort validation |
+| DF-09-005 | Complete | Aggregated draft/reference/delivery submission precondition errors |
+| DF-09-006 | Complete | Concurrency-protected withdrawal and independent draft cloning |
+| DF-09-007 | Complete | Submission key/fingerprint store and replay/conflict resolution contract |
+| DF-09-008 | Complete | Domain, application and architecture positive/negative matrices |
+
+## Phase 10 task checklist
+
+| Task | Status | Acceptance artefact |
+|---|---|---|
+| DF-10-001 | Complete | Checksum-valid source and exactly-one half-open timestamp selector |
+| DF-10-002 | Complete | Sixteen-path normalized input builder over validated projections |
+| DF-10-003 | Complete | Immutable `Decision`, `RuleEvaluation`, reasons, normalized input and checksums |
+| DF-10-004 | Complete | Explicit atomic request/decision/idempotency transaction contract |
+| DF-10-005 | Complete | Controlled failure commit and exact original-version/input retry |
+| DF-10-006 | Complete | Trusted-requester explanation returning exact policy and trace |
+| DF-10-007 | Complete | Exact-version reproduction comparison with unchanged original history |
+| DF-10-008 | Complete | Server fingerprint replay and conflicting-key rejection tests |
+| DF-10-009 | Complete | Flagship, failure, ownership, cancellation and drift matrices |
+
+## Phase 11 task checklist
+
+| Task | Status | Acceptance artefact |
+|---|---|---|
+| DF-11-001 | Complete | Manual-decision-only `ApprovalWorkflow` aggregate and immutable owned stages |
+| DF-11-002 | Complete | Shared canonical role order and unique ordered stage-plan builder |
+| DF-11-003 | Complete | Single-pending-stage activation with activation-token rotation |
+| DF-11-004 | Complete | Trusted-role approve/reject services and mandatory rejection reasons |
+| DF-11-005 | Complete | Atomic workflow/request completion contract for approved/rejected outcomes |
+| DF-11-006 | Complete | Acted/activated token rotation plus stale and repeat conflict matrix |
+| DF-11-007 | Complete | Explicit bounded inbox/detail projections and trusted role filters |
+| DF-11-008 | Complete | Permission-gated override preserving manual disposition, reason and audit source |
+| DF-11-009 | Complete | Domain/application/architecture workflow matrix and design documentation |
+
+## Phase 12 task checklist
+
+| Task | Status | Acceptance artefact |
+|---|---|---|
+| DF-12-001 | Complete | Bounded ordinal canonical `AuditPayload` with sensitive-field denial |
+| DF-12-002 | Complete | PostgreSQL-precision `AuditEvent`, per-aggregate sequence and golden hash |
+| DF-12-003 | Complete | Caller-owned PostgreSQL transaction append and commit/rollback test |
+| DF-12-004 | Complete | Chain/link/hash verifier returning first invalid sequence |
+| DF-12-005 | Complete | All current domain events map to audit plus same-transaction outbox |
+| DF-12-006 | Complete | Leased dispatcher with capped exponential retry and terminal failure |
+| DF-12-007 | Complete | Lease-protected idempotent completion and unique notification source |
+| DF-12-008 | Complete | Immutable in-app notification and real Mailpit HTTP adapter test |
+| DF-12-009 | Complete | Bounded completed-only cleanup retaining pending/failed rows |
+| DF-12-010 | Complete | PostgreSQL 18.4 Testcontainers transaction/retry/hash/concurrency matrix |
+
+## Phase 13 task checklist
+
+| Task | Status | Acceptance artefact |
+|---|---|---|
+| DF-13-001 | Complete | EF Core Identity store and verified secure application-cookie options |
+| DF-13-002 | Complete | Ten-role idempotent PostgreSQL seeder and duplicate rerun proof |
+| DF-13-003 | Complete | Explicit demo/environment/password gates and production/collision tests |
+| DF-13-004 | Complete | Cookie-bound SPA token endpoint and missing/mismatched-token rejection |
+| DF-13-005 | Complete | Authenticated NameIdentifier adapter and no-requester-input contract test |
+| DF-13-006 | Complete | Owner/assigned-approver/auditor request authorization matrix |
+| DF-13-007 | Complete | Pending-stage matching-role action authorization matrix |
+| DF-13-008 | Complete | Author/publisher/auditor/admin/explicit-override policy separation |
+| DF-13-009 | Complete | Five-attempt lockout and IP-partitioned login rate-limit abuse tests |
+| DF-13-010 | Complete | Real login, me, logout, role and negative API/PostgreSQL tests |
+
+## Phase 14 task checklist
+
+| Task | Status | Acceptance artefact |
+|---|---|---|
+| DF-14-001 | Complete | One `/api/v1` group plus route-data-source convention test |
+| DF-14-002 | Complete | Central safe exception/status problem mapping with trace ID |
+| DF-14-003 | Complete | Distinct field-400 and business-422 validation contracts |
+| DF-14-004 | Complete | Offset/page-size bounds and per-endpoint sort/filter allow lists |
+| DF-14-005 | Complete | Strong ETag writer/parser and 428/400/412 matrix |
+| DF-14-006 | Complete | Authenticated opt-in replay/conflict/in-progress idempotency middleware |
+| DF-14-007 | Complete | 256-KiB body limit, security headers and deny-default CORS |
+| DF-14-008 | Complete | Endpoint policy 429 problem with `Retry-After` |
+| DF-14-009 | Complete | OpenAPI 3.1 cookie auth, protected operations and examples |
+| DF-14-010 | Complete | Deep JSON contract snapshot excluding only host-specific server URL |
+| DF-14-011 | Complete | CSV escaping and whitespace-aware formula neutralization |
+| DF-14-012 | Complete | Reusable API factory with PostgreSQL 18.4 Testcontainers |

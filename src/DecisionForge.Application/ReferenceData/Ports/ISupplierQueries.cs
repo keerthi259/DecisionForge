@@ -9,10 +9,15 @@ public sealed record SupplierLookup(
     string Name,
     SupplierApprovalStatus ApprovalStatus,
     SupplierOnboardingStatus OnboardingStatus,
-    SupplierRiskRating RiskRating);
+    SupplierRiskRating RiskRating,
+    bool IsActive);
 
 public interface ISupplierQueries
 {
+    Task<SupplierLookup?> FindByIdAsync(
+        Guid id,
+        CancellationToken cancellationToken);
+
     Task<SupplierLookup?> FindActiveByIdAsync(
         Guid id,
         CancellationToken cancellationToken);

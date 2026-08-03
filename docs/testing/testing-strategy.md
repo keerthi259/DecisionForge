@@ -48,6 +48,84 @@ properties. BenchmarkDotNet exercises the maximum 100-rule policy, while
 Stryker separately enforces the overall evaluator and critical
 operator/precedence mutation thresholds.
 
+Phase 8 adds policy aggregate and application tests for valid/invalid draft
+retention, identity consistency, deterministic checksum refresh, monotonic
+version allocation, stale concurrency, publication immutability, half-open UTC
+range boundaries, overlap rejection, retirement, structured diffs,
+cancellation and safe audit mappings. Architecture tests enforce closed
+lifecycle entities and two specific non-generic cancellation-aware ports.
+The verified Phase 8 results are 96.55%/92.67% for Domain, 96.46%/94.64%
+for Application and 95.93%/91.60% for the affected policy contract.
+
+Phase 9 adds request-domain regression tests for token rotation, stale writes,
+atomic failures and independent cloning. Application tests cover trusted-user
+ownership, create/update/item/withdraw/clone use cases, server totals,
+non-disclosing resource denial, pagination boundaries, explicit projections,
+submission precondition aggregation, cancellation and idempotent replay versus
+conflicting fingerprints. Architecture tests enforce specific non-generic
+ports, cancellation propagation, owner-scoped loading, immutable results and
+the absence of ownership or total fields in mutating input contracts.
+
+Phase 10 adds domain tests for checksum-valid evaluation sources, exact
+half-open effective selection, zero/ambiguous policy failures, immutable
+decision and rule evidence, final disposition transitions and retry-context
+drift rejection. Application tests cover the flagship manual decision,
+approved fact whitelisting, structured precondition failures, owner denial,
+technical failure, cancellation, same-policy/same-input retry, exact replay,
+conflicting fingerprints, explanation and historical reproduction with both
+equivalent and drifted results. Architecture tests enforce specific
+cancellation-aware ports, bounded service dependencies, owner-scoped decision
+reads and the atomic request/decision/idempotency commit signature.
+The verified Phase 10 results are 95.92% line / 90.02% branch for Domain and
+96.25% line / 92.44% branch for Application. The complete suite passed 473
+tests with no failures or skips.
+
+Phase 11 adds domain tests for manual-only workflow creation, canonical role
+ordering, single-stage activation, approve/reject progression, reason bounds,
+wrong-role and invalid-state denial, stale/reused tokens, repeat actions,
+terminal request transitions and override evidence. Application tests cover
+trusted user/role resolution, explicit override permission, atomic
+workflow/request commits, cancellation, bounded role-filtered inbox/detail
+queries and safe resource denial. Architecture tests enforce specific
+cancellation-aware ports, immutable workflow/projection surfaces, non-forgeable
+actor/role commands, bounded pages and transaction signatures. Measured Phase
+11 coverage and complete-suite counts are recorded in
+`docs/evidence/phase-11-approval-workflow.md`.
+
+Phase 12 adds domain golden-hash, canonical safe-payload, tamper, outbox-state
+and notification tests; application mapping, retry, cancellation, idempotent
+completion and notification-handler tests; and architecture boundary checks.
+Infrastructure tests use pinned PostgreSQL 18.4 and Mailpit 1.30.5
+Testcontainers with no conditional skip. They prove caller-owned transaction
+commit/rollback, concurrent per-aggregate sequence serialization, hash reload,
+lease/retry/terminal behavior, safe cleanup, unique in-app delivery and a
+message visible through the real Mailpit API.
+
+Phase 13 adds real PostgreSQL Identity persistence and API-host tests for
+secure cookie options, idempotent role/demo seeding, production seed denial,
+non-demo alias collision, login/me/logout, malformed credentials, cookie-bound
+antiforgery, lockout and IP rate limiting. Authorization-service tests cover
+request owner/assigned approver/auditor scope, draft mutation, pending-stage
+role matching, author/publisher separation, read-only audit, administration and
+explicit override permission. Architecture tests keep Identity/EF in
+Infrastructure, HTTP context and handlers in API, and Domain/Application free
+of those frameworks.
+
+Phase 14 adds API integration tests for version routing, safe unknown/expected
+problems, field versus business validation, pagination boundaries, unsupported
+sort/filter names, strong/missing/malformed/stale ETags, authenticated
+idempotency replay and changed-input conflict, anonymous replay denial, body
+limits, security headers, restrictive CORS, endpoint 429 retry information and
+CSV formula injection. A deep OpenAPI JSON snapshot detects contract drift.
+The reusable API fixture and Identity fixture both run pinned PostgreSQL 18.4
+through Testcontainers without conditional skips.
+
+Phase 14 API coverage excludes only the first-party
+`Microsoft.AspNetCore.OpenApi.SourceGenerators/**` XML-comment helper embedded
+in the API assembly. No DecisionForge source is excluded; the generated
+document is exercised and deep snapshot-compared. The measured API result is
+87.46% line and 68.09% branch.
+
 ## Commands
 
 Run the backend suite and static baseline:

@@ -35,6 +35,18 @@ public static class PolicyCanonicalSerializer
         return buffer.WrittenSpan.ToArray();
     }
 
+    public static string SerializeCondition(PolicyCondition condition)
+    {
+        ArgumentNullException.ThrowIfNull(condition);
+        return SerializeFragment(writer => WriteCondition(writer, condition));
+    }
+
+    public static string SerializeOutcome(PolicyOutcome outcome)
+    {
+        ArgumentNullException.ThrowIfNull(outcome);
+        return SerializeFragment(writer => WriteOutcome(writer, outcome));
+    }
+
     private static void WriteDefinition(Utf8JsonWriter writer, PolicyDefinition definition)
     {
         writer.WriteStartObject();
@@ -51,6 +63,17 @@ public static class PolicyCanonicalSerializer
 
         writer.WriteEndArray();
         writer.WriteEndObject();
+    }
+
+    private static string SerializeFragment(Action<Utf8JsonWriter> write)
+    {
+        ArrayBufferWriter<byte> buffer = new();
+        using (Utf8JsonWriter writer = new(buffer))
+        {
+            write(writer);
+        }
+
+        return Encoding.UTF8.GetString(buffer.WrittenSpan);
     }
 
     private static void WriteRule(Utf8JsonWriter writer, PolicyRule rule)

@@ -58,6 +58,41 @@ public sealed record DepartmentEvaluationFacts
     public decimal AutoApprovalLimit { get; }
 }
 
+public sealed record DepartmentEvaluationSource
+{
+    private DepartmentEvaluationSource(
+        Guid id,
+        DepartmentCode code,
+        Money autoApprovalLimit,
+        bool isActive)
+    {
+        Id = id;
+        Code = code;
+        AutoApprovalLimit = autoApprovalLimit;
+        IsActive = isActive;
+    }
+
+    public Guid Id { get; }
+
+    public DepartmentCode Code { get; }
+
+    public Money AutoApprovalLimit { get; }
+
+    public bool IsActive { get; }
+
+    public static DepartmentEvaluationSource Create(
+        Guid id,
+        DepartmentCode code,
+        Money autoApprovalLimit,
+        bool isActive)
+    {
+        DomainGuard.NotEmpty(id, nameof(id));
+        ArgumentNullException.ThrowIfNull(code);
+        ArgumentNullException.ThrowIfNull(autoApprovalLimit);
+        return new DepartmentEvaluationSource(id, code, autoApprovalLimit, isActive);
+    }
+}
+
 public sealed record SupplierEvaluationFacts
 {
     internal SupplierEvaluationFacts(
@@ -79,6 +114,49 @@ public sealed record SupplierEvaluationFacts
     public SupplierRiskRating RiskRating { get; }
 
     public bool IsActive { get; }
+}
+
+public sealed record SupplierEvaluationSource
+{
+    private SupplierEvaluationSource(
+        Guid id,
+        SupplierApprovalStatus approvalStatus,
+        SupplierOnboardingStatus onboardingStatus,
+        SupplierRiskRating riskRating,
+        bool isActive)
+    {
+        Id = id;
+        ApprovalStatus = approvalStatus;
+        OnboardingStatus = onboardingStatus;
+        RiskRating = riskRating;
+        IsActive = isActive;
+    }
+
+    public Guid Id { get; }
+
+    public SupplierApprovalStatus ApprovalStatus { get; }
+
+    public SupplierOnboardingStatus OnboardingStatus { get; }
+
+    public SupplierRiskRating RiskRating { get; }
+
+    public bool IsActive { get; }
+
+    public static SupplierEvaluationSource Create(
+        Guid id,
+        SupplierApprovalStatus approvalStatus,
+        SupplierOnboardingStatus onboardingStatus,
+        SupplierRiskRating riskRating,
+        bool isActive)
+    {
+        DomainGuard.NotEmpty(id, nameof(id));
+        return new SupplierEvaluationSource(
+            id,
+            approvalStatus,
+            onboardingStatus,
+            riskRating,
+            isActive);
+    }
 }
 
 public sealed record DerivedEvaluationFacts
@@ -127,8 +205,33 @@ public sealed record EvaluationFactSnapshot
         ArgumentNullException.ThrowIfNull(purchaseRequest);
         ArgumentNullException.ThrowIfNull(department);
         ArgumentNullException.ThrowIfNull(supplier);
-        EnsureReferencesMatch(purchaseRequest, department, supplier);
-        EnsureActive(department, supplier);
+        return Create(
+            purchaseRequest,
+            DepartmentEvaluationSource.Create(
+                department.Id,
+                department.Code,
+                department.AutoApprovalLimit,
+                department.IsActive),
+            SupplierEvaluationSource.Create(
+                supplier.Id,
+                supplier.ApprovalStatus,
+                supplier.OnboardingStatus,
+                supplier.RiskRating,
+                supplier.IsActive),
+            evaluationDate);
+    }
+
+    public static EvaluationFactSnapshot Create(
+        PurchaseRequest purchaseRequest,
+        DepartmentEvaluationSource department,
+        SupplierEvaluationSource supplier,
+        DateOnly evaluationDate)
+    {
+        ArgumentNullException.ThrowIfNull(purchaseRequest);
+        ArgumentNullException.ThrowIfNull(department);
+        ArgumentNullException.ThrowIfNull(supplier);
+        EnsureReferencesMatch(purchaseRequest, department.Id, supplier.Id);
+        EnsureActive(department.IsActive, supplier.IsActive);
 
         if (purchaseRequest.Items.Count == 0)
         {
@@ -184,11 +287,11 @@ public sealed record EvaluationFactSnapshot
 
     private static void EnsureReferencesMatch(
         PurchaseRequest purchaseRequest,
-        Department department,
-        Supplier supplier)
+        Guid departmentId,
+        Guid supplierId)
     {
-        if (purchaseRequest.Metadata.DepartmentId != department.Id
-            || purchaseRequest.Metadata.SupplierId != supplier.Id)
+        if (purchaseRequest.Metadata.DepartmentId != departmentId
+            || purchaseRequest.Metadata.SupplierId != supplierId)
         {
             throw new DomainRuleException(
                 DomainErrorCodes.ReferenceMismatch,
@@ -196,16 +299,16 @@ public sealed record EvaluationFactSnapshot
         }
     }
 
-    private static void EnsureActive(Department department, Supplier supplier)
+    private static void EnsureActive(bool departmentIsActive, bool supplierIsActive)
     {
-        if (!department.IsActive)
+        if (!departmentIsActive)
         {
             throw new DomainRuleException(
                 DomainErrorCodes.InactiveReference,
                 "The selected department is inactive.");
         }
 
-        if (!supplier.IsActive)
+        if (!supplierIsActive)
         {
             throw new DomainRuleException(
                 DomainErrorCodes.InactiveReference,

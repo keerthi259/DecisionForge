@@ -6,7 +6,7 @@ using DecisionForge.Domain.ValueObjects;
 
 namespace DecisionForge.Domain.PurchaseRequests;
 
-public sealed class PurchaseRequest : AggregateRoot
+public sealed partial class PurchaseRequest : AggregateRoot
 {
     private readonly List<PurchaseRequestItem> _items = [];
     private readonly ReadOnlyCollection<PurchaseRequestItem> _itemsView;
@@ -17,6 +17,7 @@ public sealed class PurchaseRequest : AggregateRoot
         Guid requesterId,
         CurrencyCode currency,
         PurchaseRequestMetadata metadata,
+        ConcurrencyToken concurrencyToken,
         DateTimeOffset createdAt)
         : base(id)
     {
@@ -25,6 +26,7 @@ public sealed class PurchaseRequest : AggregateRoot
         RequesterId = requesterId;
         Currency = currency;
         Metadata = metadata;
+        ConcurrencyToken = concurrencyToken;
         Status = PurchaseRequestStatus.Draft;
         Total = Money.Zero(currency);
         CreatedAt = createdAt;
@@ -43,11 +45,15 @@ public sealed class PurchaseRequest : AggregateRoot
 
     public Money Total { get; private set; }
 
+    public ConcurrencyToken ConcurrencyToken { get; private set; }
+
     public DateTimeOffset CreatedAt { get; }
 
     public DateTimeOffset LastModifiedAt { get; private set; }
 
     public DateTimeOffset? SubmittedAt { get; private set; }
+
+    public PurchaseRequestEvaluationContext? EvaluationContext { get; private set; }
 
     public IReadOnlyList<PurchaseRequestItem> Items => _itemsView;
 
@@ -57,11 +63,13 @@ public sealed class PurchaseRequest : AggregateRoot
         Guid requesterId,
         CurrencyCode currency,
         PurchaseRequestMetadata metadata,
+        ConcurrencyToken concurrencyToken,
         DateTimeOffset createdAt)
     {
         ArgumentNullException.ThrowIfNull(requestNumber);
         ArgumentNullException.ThrowIfNull(currency);
         ArgumentNullException.ThrowIfNull(metadata);
+        ArgumentNullException.ThrowIfNull(concurrencyToken);
         DomainGuard.NotEmpty(requesterId, nameof(requesterId));
         DateTimeOffset utcCreatedAt = DomainGuard.Utc(createdAt, nameof(createdAt));
 
@@ -71,23 +79,28 @@ public sealed class PurchaseRequest : AggregateRoot
             requesterId,
             currency,
             metadata,
+            concurrencyToken,
             utcCreatedAt);
         request.Raise(new PurchaseRequestCreatedDomainEvent(id, requesterId, utcCreatedAt));
         return request;
     }
 
-    public void UpdateMetadata(PurchaseRequestMetadata metadata, DateTimeOffset occurredAt)
+    public void UpdateMetadata(
+        PurchaseRequestMetadata metadata,
+        ConcurrencyToken expectedToken,
+        ConcurrencyToken nextToken,
+        DateTimeOffset occurredAt)
     {
         ArgumentNullException.ThrowIfNull(metadata);
         EnsureDraft();
-        DateTimeOffset utcOccurredAt = ValidateMutationTime(occurredAt);
+        DateTimeOffset utcOccurredAt = ValidateMutation(expectedToken, nextToken, occurredAt);
         if (Metadata == metadata)
         {
             return;
         }
 
         Metadata = metadata;
-        Touch(utcOccurredAt);
+        CompleteMutation(nextToken, utcOccurredAt);
         Raise(new PurchaseRequestMetadataChangedDomainEvent(
             Id,
             metadata.DepartmentId,
@@ -101,10 +114,12 @@ public sealed class PurchaseRequest : AggregateRoot
         int quantity,
         Money unitPrice,
         ProcurementCategory category,
+        ConcurrencyToken expectedToken,
+        ConcurrencyToken nextToken,
         DateTimeOffset occurredAt)
     {
         EnsureDraft();
-        DateTimeOffset utcOccurredAt = ValidateMutationTime(occurredAt);
+        DateTimeOffset utcOccurredAt = ValidateMutation(expectedToken, nextToken, occurredAt);
         if (_items.Any(item => item.Id == itemId))
         {
             throw new DomainRuleException(
@@ -123,7 +138,7 @@ public sealed class PurchaseRequest : AggregateRoot
         Money newTotal = Total.Add(item.LineTotal);
         _items.Add(item);
         Total = newTotal;
-        Touch(utcOccurredAt);
+        CompleteMutation(nextToken, utcOccurredAt);
         Raise(new PurchaseRequestItemAddedDomainEvent(
             Id,
             item.Id,
@@ -139,10 +154,12 @@ public sealed class PurchaseRequest : AggregateRoot
         int quantity,
         Money unitPrice,
         ProcurementCategory category,
+        ConcurrencyToken expectedToken,
+        ConcurrencyToken nextToken,
         DateTimeOffset occurredAt)
     {
         EnsureDraft();
-        DateTimeOffset utcOccurredAt = ValidateMutationTime(occurredAt);
+        DateTimeOffset utcOccurredAt = ValidateMutation(expectedToken, nextToken, occurredAt);
         PurchaseRequestItem item = FindItem(itemId);
         EnsureCurrency(unitPrice);
         PurchaseRequestItem proposed = PurchaseRequestItem.Create(
@@ -162,7 +179,7 @@ public sealed class PurchaseRequest : AggregateRoot
         Money newTotal = CalculateTotal(itemId, proposed);
         _ = item.Change(description, quantity, unitPrice, category);
         Total = newTotal;
-        Touch(utcOccurredAt);
+        CompleteMutation(nextToken, utcOccurredAt);
         Raise(new PurchaseRequestItemChangedDomainEvent(
             Id,
             item.Id,
@@ -171,69 +188,19 @@ public sealed class PurchaseRequest : AggregateRoot
             utcOccurredAt));
     }
 
-    public void RemoveItem(Guid itemId, DateTimeOffset occurredAt)
+    public void RemoveItem(
+        Guid itemId,
+        ConcurrencyToken expectedToken,
+        ConcurrencyToken nextToken,
+        DateTimeOffset occurredAt)
     {
         EnsureDraft();
-        DateTimeOffset utcOccurredAt = ValidateMutationTime(occurredAt);
+        DateTimeOffset utcOccurredAt = ValidateMutation(expectedToken, nextToken, occurredAt);
         PurchaseRequestItem item = FindItem(itemId);
         _items.Remove(item);
         Total = CalculateTotal();
-        Touch(utcOccurredAt);
+        CompleteMutation(nextToken, utcOccurredAt);
         Raise(new PurchaseRequestItemRemovedDomainEvent(Id, item.Id, utcOccurredAt));
-    }
-
-    public void Submit(DateTimeOffset occurredAt)
-    {
-        EnsureStatus(PurchaseRequestStatus.Draft);
-        if (_items.Count == 0)
-        {
-            throw new DomainRuleException(
-                DomainErrorCodes.InvalidState,
-                "A purchase request requires at least one item before submission.");
-        }
-
-        DateTimeOffset utcOccurredAt = ValidateMutationTime(occurredAt);
-        Status = PurchaseRequestStatus.Submitted;
-        SubmittedAt = utcOccurredAt;
-        Touch(utcOccurredAt);
-        Raise(new PurchaseRequestSubmittedDomainEvent(Id, Total, utcOccurredAt));
-    }
-
-    public void BeginEvaluation(DateTimeOffset occurredAt)
-    {
-        EnsureStatus(PurchaseRequestStatus.Submitted);
-        DateTimeOffset utcOccurredAt = ValidateMutationTime(occurredAt);
-        Status = PurchaseRequestStatus.Evaluating;
-        Touch(utcOccurredAt);
-        Raise(new PurchaseRequestEvaluationStartedDomainEvent(Id, utcOccurredAt));
-    }
-
-    public void MarkEvaluationFailed(ReasonCode reasonCode, DateTimeOffset occurredAt)
-    {
-        ArgumentNullException.ThrowIfNull(reasonCode);
-        EnsureStatus(PurchaseRequestStatus.Evaluating);
-        DateTimeOffset utcOccurredAt = ValidateMutationTime(occurredAt);
-        Status = PurchaseRequestStatus.EvaluationFailed;
-        Touch(utcOccurredAt);
-        Raise(new PurchaseRequestEvaluationFailedDomainEvent(Id, reasonCode, utcOccurredAt));
-    }
-
-    public void RetryEvaluation(DateTimeOffset occurredAt)
-    {
-        EnsureStatus(PurchaseRequestStatus.EvaluationFailed);
-        DateTimeOffset utcOccurredAt = ValidateMutationTime(occurredAt);
-        Status = PurchaseRequestStatus.Submitted;
-        Touch(utcOccurredAt);
-        Raise(new PurchaseRequestEvaluationRetriedDomainEvent(Id, utcOccurredAt));
-    }
-
-    public void Withdraw(DateTimeOffset occurredAt)
-    {
-        EnsureStatus(PurchaseRequestStatus.Submitted, PurchaseRequestStatus.PendingApproval);
-        DateTimeOffset utcOccurredAt = ValidateMutationTime(occurredAt);
-        Status = PurchaseRequestStatus.Withdrawn;
-        Touch(utcOccurredAt);
-        Raise(new PurchaseRequestWithdrawnDomainEvent(Id, utcOccurredAt));
     }
 
     private PurchaseRequestItem FindItem(Guid itemId)
@@ -289,21 +256,22 @@ public sealed class PurchaseRequest : AggregateRoot
                     : item.LineTotal));
     }
 
-    private DateTimeOffset ValidateMutationTime(DateTimeOffset occurredAt)
+    private DateTimeOffset ValidateMutation(
+        ConcurrencyToken expectedToken,
+        ConcurrencyToken nextToken,
+        DateTimeOffset occurredAt)
     {
-        DateTimeOffset utcOccurredAt = DomainGuard.Utc(occurredAt, nameof(occurredAt));
-        if (utcOccurredAt < LastModifiedAt)
-        {
-            throw DomainGuard.Validation(
-                nameof(occurredAt),
-                "Mutation time cannot precede the previous aggregate change.");
-        }
-
-        return utcOccurredAt;
+        return PurchaseRequestGuard.Mutation(
+            ConcurrencyToken,
+            expectedToken,
+            nextToken,
+            LastModifiedAt,
+            occurredAt);
     }
 
-    private void Touch(DateTimeOffset occurredAt)
+    private void CompleteMutation(ConcurrencyToken nextToken, DateTimeOffset occurredAt)
     {
+        ConcurrencyToken = nextToken;
         LastModifiedAt = occurredAt;
     }
 }

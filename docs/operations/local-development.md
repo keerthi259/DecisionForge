@@ -65,8 +65,17 @@ same-origin; the API does not enable permissive CORS.
 `.env.example` documents non-secret environment names but is not a credential
 file. Use .NET user-secrets or process environment variables for developer
 secrets. Never commit a populated `.env`, PostgreSQL connection string, demo
-password, cookie or API key. Demo identities and their password configuration
-are intentionally deferred to Phase 13.
+password, cookie or API key. Phase 13 demo identities require the explicit
+`DecisionForge:Identity:Seeding:Demo:Enabled` setting, a Development or Demo
+environment and `DecisionForge:Identity:Seeding:Demo:Password` supplied through
+user-secrets or the process environment. Both role and demo startup seeding are
+disabled by default.
+
+Phase 13 intentionally does not create the Identity schema in a runtime
+database. Authentication tests use a disposable Testcontainers database;
+Phase 15 will supply the reviewed migration before local demo seeding is
+enabled. Starting the current topology therefore preserves the Phase 3 health
+surface but does not claim a seeded local login journey yet.
 
 The API validates `DecisionForge:Platform` during startup. Missing application
 or correlation-header settings stop startup with the exact configuration path.

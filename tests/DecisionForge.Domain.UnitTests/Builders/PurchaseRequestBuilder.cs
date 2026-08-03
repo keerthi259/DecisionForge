@@ -52,16 +52,20 @@ internal sealed class PurchaseRequestBuilder
             _requesterId,
             _currency,
             _metadata,
+            Token(0),
             DefaultTime);
 
-        foreach (ItemSpecification item in _items)
+        for (int index = 0; index < _items.Count; index++)
         {
+            ItemSpecification item = _items[index];
             request.AddItem(
                 item.Id,
                 "Developer laptop",
                 item.Quantity,
                 Money.Create(item.UnitPrice, _currency),
                 item.Category,
+                request.ConcurrencyToken,
+                Token(index + 1),
                 DefaultTime);
         }
 
@@ -77,6 +81,11 @@ internal sealed class PurchaseRequestBuilder
             DataSensitivity.Internal,
             new DateOnly(2026, 8, 31),
             BusinessJustification.Parse("Supports the committed customer delivery."));
+    }
+
+    public static ConcurrencyToken Token(int sequence)
+    {
+        return ConcurrencyToken.Create(Guid.Parse($"55555555-5555-7555-8555-{sequence:000000000000}"));
     }
 
     private sealed record ItemSpecification(

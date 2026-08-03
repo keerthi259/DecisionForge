@@ -5,16 +5,6 @@ namespace DecisionForge.Domain.Policies.Evaluation;
 
 internal static class PolicyOutcomeAggregator
 {
-    private static readonly Dictionary<PolicyApproverRole, int> _roleOrder =
-        new Dictionary<PolicyApproverRole, int>
-        {
-            [PolicyApproverRole.DepartmentApprover] = 1,
-            [PolicyApproverRole.ProcurementApprover] = 2,
-            [PolicyApproverRole.SecurityApprover] = 3,
-            [PolicyApproverRole.FinanceApprover] = 4,
-            [PolicyApproverRole.SeniorApprover] = 5,
-        };
-
     public static PolicyOutcomeAggregate Aggregate(
         PolicyOutcome defaultOutcome,
         IReadOnlyList<PolicyRuleEvaluation> rules)
@@ -37,11 +27,8 @@ internal static class PolicyOutcomeAggregator
         IEnumerable<PolicyOutcome> contributing = defaultApplied
             ? matched.Append(defaultOutcome)
             : matched;
-        PolicyApproverRole[] roles = contributing
-            .SelectMany(outcome => outcome.RequiredApproverRoles)
-            .Distinct()
-            .OrderBy(role => _roleOrder[role])
-            .ToArray();
+        IReadOnlyList<PolicyApproverRole> roles = PolicyApproverRoleOrder.OrderDistinct(
+            contributing.SelectMany(outcome => outcome.RequiredApproverRoles));
         List<PolicyEvaluationReason> reasons = [];
         HashSet<string> reasonCodes = new(StringComparer.Ordinal);
         foreach (PolicyOutcome outcome in contributing)

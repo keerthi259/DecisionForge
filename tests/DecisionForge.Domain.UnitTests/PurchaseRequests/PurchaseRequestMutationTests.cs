@@ -24,6 +24,8 @@ public sealed class PurchaseRequestMutationTests
             2,
             Money.Create(100m, _inr),
             ProcurementCategory.Hardware,
+            request.ConcurrencyToken,
+            PurchaseRequestBuilder.Token(10),
             _later);
 
         Assert.Equal(200m, request.Total.Amount);
@@ -40,6 +42,8 @@ public sealed class PurchaseRequestMutationTests
             3,
             Money.Create(125.50m, _inr),
             ProcurementCategory.Hardware,
+            request.ConcurrencyToken,
+            PurchaseRequestBuilder.Token(11),
             _later.AddMinutes(1));
 
         Assert.Equal(376.50m, request.Total.Amount);
@@ -48,7 +52,11 @@ public sealed class PurchaseRequestMutationTests
             Assert.IsType<PurchaseRequestItemChangedDomainEvent>(request.DomainEvents[1]);
         Assert.Equal(3, changed.Quantity);
 
-        request.RemoveItem(item.Id, _later.AddMinutes(2));
+        request.RemoveItem(
+            item.Id,
+            request.ConcurrencyToken,
+            PurchaseRequestBuilder.Token(12),
+            _later.AddMinutes(2));
 
         Assert.Empty(request.Items);
         Assert.Equal(Money.Zero(_inr), request.Total);
@@ -85,8 +93,16 @@ public sealed class PurchaseRequestMutationTests
             BusinessJustification.Parse("Urgent delivery commitment."));
         request.ClearDomainEvents();
 
-        request.UpdateMetadata(updated, _later);
-        request.UpdateMetadata(updated, _later.AddMinutes(1));
+        request.UpdateMetadata(
+            updated,
+            request.ConcurrencyToken,
+            PurchaseRequestBuilder.Token(10),
+            _later);
+        request.UpdateMetadata(
+            updated,
+            request.ConcurrencyToken,
+            PurchaseRequestBuilder.Token(11),
+            _later.AddMinutes(1));
 
         PurchaseRequestMetadataChangedDomainEvent changed =
             Assert.IsType<PurchaseRequestMetadataChangedDomainEvent>(
@@ -109,6 +125,8 @@ public sealed class PurchaseRequestMutationTests
             2,
             Money.Create(1_250m, _inr),
             ProcurementCategory.Hardware,
+            request.ConcurrencyToken,
+            PurchaseRequestBuilder.Token(10),
             _later);
 
         Assert.Empty(request.DomainEvents);
@@ -127,6 +145,8 @@ public sealed class PurchaseRequestMutationTests
                 1,
                 Money.Create(1m, _inr),
                 ProcurementCategory.Hardware,
+                request.ConcurrencyToken,
+                PurchaseRequestBuilder.Token(10),
                 _later));
         DomainRuleException updateMissing = Assert.Throws<DomainRuleException>(
             () => request.UpdateItem(
@@ -135,10 +155,14 @@ public sealed class PurchaseRequestMutationTests
                 1,
                 Money.Create(1m, _inr),
                 ProcurementCategory.Other,
+                request.ConcurrencyToken,
+                PurchaseRequestBuilder.Token(10),
                 _later));
         DomainRuleException removeMissing = Assert.Throws<DomainRuleException>(
             () => request.RemoveItem(
                 Guid.Parse("aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaac"),
+                request.ConcurrencyToken,
+                PurchaseRequestBuilder.Token(10),
                 _later));
 
         Assert.Equal(DomainErrorCodes.DuplicateEntity, duplicate.Code);
@@ -162,6 +186,8 @@ public sealed class PurchaseRequestMutationTests
                 1,
                 usd,
                 ProcurementCategory.Other,
+                request.ConcurrencyToken,
+                PurchaseRequestBuilder.Token(10),
                 _later));
         DomainRuleException update = Assert.Throws<DomainRuleException>(
             () => request.UpdateItem(
@@ -170,6 +196,8 @@ public sealed class PurchaseRequestMutationTests
                 1,
                 usd,
                 ProcurementCategory.Other,
+                request.ConcurrencyToken,
+                PurchaseRequestBuilder.Token(10),
                 _later));
 
         Assert.Equal(DomainErrorCodes.CurrencyMismatch, add.Code);
@@ -195,6 +223,8 @@ public sealed class PurchaseRequestMutationTests
                 1,
                 Money.Create(0.01m, _inr),
                 ProcurementCategory.Other,
+                request.ConcurrencyToken,
+                PurchaseRequestBuilder.Token(10),
                 _later));
 
         Assert.Equal(DomainErrorCodes.AmountOverflow, addOverflow.Code);
@@ -215,6 +245,8 @@ public sealed class PurchaseRequestMutationTests
                 1,
                 Money.Create(0.02m, _inr),
                 ProcurementCategory.Other,
+                twoItems.ConcurrencyToken,
+                PurchaseRequestBuilder.Token(10),
                 _later));
 
         Assert.Equal(DomainErrorCodes.AmountOverflow, updateOverflow.Code);
@@ -236,10 +268,14 @@ public sealed class PurchaseRequestMutationTests
                 1,
                 Money.Create(1m, _inr),
                 ProcurementCategory.Hardware,
+                request.ConcurrencyToken,
+                PurchaseRequestBuilder.Token(10),
                 PurchaseRequestBuilder.DefaultTime.AddTicks(-1)));
         Assert.Throws<DomainRuleException>(
             () => request.UpdateMetadata(
                 PurchaseRequestBuilder.DefaultMetadata(),
+                request.ConcurrencyToken,
+                PurchaseRequestBuilder.Token(10),
                 PurchaseRequestBuilder.DefaultTime.ToOffset(TimeSpan.FromHours(1))));
 
         Assert.Empty(request.Items);
@@ -251,10 +287,17 @@ public sealed class PurchaseRequestMutationTests
     public void SubmittedRequestRejectsEveryDraftMutation()
     {
         PurchaseRequest request = new PurchaseRequestBuilder().WithItem().Build();
-        request.Submit(_later);
+        request.Submit(
+            request.ConcurrencyToken,
+            PurchaseRequestBuilder.Token(10),
+            _later);
 
         AssertInvalidState(
-            () => request.UpdateMetadata(PurchaseRequestBuilder.DefaultMetadata(), _later));
+            () => request.UpdateMetadata(
+                PurchaseRequestBuilder.DefaultMetadata(),
+                request.ConcurrencyToken,
+                PurchaseRequestBuilder.Token(11),
+                _later));
         AssertInvalidState(
             () => request.AddItem(
                 Guid.Parse("aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaf"),
@@ -262,6 +305,8 @@ public sealed class PurchaseRequestMutationTests
                 1,
                 Money.Create(1m, _inr),
                 ProcurementCategory.Other,
+                request.ConcurrencyToken,
+                PurchaseRequestBuilder.Token(11),
                 _later));
         AssertInvalidState(
             () => request.UpdateItem(
@@ -270,9 +315,15 @@ public sealed class PurchaseRequestMutationTests
                 1,
                 Money.Create(1m, _inr),
                 ProcurementCategory.Other,
+                request.ConcurrencyToken,
+                PurchaseRequestBuilder.Token(11),
                 _later));
         AssertInvalidState(
-            () => request.RemoveItem(PurchaseRequestItemBuilder.DefaultItemId, _later));
+            () => request.RemoveItem(
+                PurchaseRequestItemBuilder.DefaultItemId,
+                request.ConcurrencyToken,
+                PurchaseRequestBuilder.Token(11),
+                _later));
     }
 
     private static void AssertInvalidState(Action action)

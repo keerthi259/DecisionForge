@@ -93,3 +93,22 @@ trailing zeroes, and no formatting whitespace. Optional role arrays are
 omitted when empty. The policy checksum is lowercase hexadecimal SHA-256 over
 the UTF-8 canonical bytes. The checksum identifies content; it is not a
 signature and does not establish publisher trust.
+
+## Version lifecycle
+
+The JSON contract becomes publishable only inside a valid Draft
+`PolicyVersion`. Drafts retain their submitted text, but invalid drafts have no
+definition or checksum. A valid draft's `policyCode` and `name` must match its
+owning `Policy`. Publication makes the definition and checksum immutable and
+assigns a non-overlapping UTC `[effectiveFrom, effectiveUntil)` interval.
+Retirement retains the version for history. Full lifecycle and comparison
+semantics are documented in `policy-lifecycle.md` and ADR-0007.
+
+At submission, the domain selector independently applies those half-open ranges
+to the request's UTC submission timestamp and requires exactly one published
+version. Zero or multiple applicable versions block submission. The evaluation
+source recalculates the canonical definition checksum before use. Technical
+retries and historical reproduction load the exact recorded version instead of
+selecting the version currently effective; retired historical versions remain
+valid for that exact lookup. Decision evidence retains the version identity,
+checksum, normalized input and complete rule trace.

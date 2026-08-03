@@ -1,5 +1,6 @@
 using DecisionForge.Application.Platform;
 using DecisionForge.Infrastructure.Platform;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DecisionForge.Infrastructure.IntegrationTests;
 
@@ -32,6 +33,19 @@ public sealed class PlatformInfrastructureTests
         Guid generated = generator.Create();
 
         Assert.Equal('7', generated.ToString("D")[14]);
+    }
+
+    [Fact]
+    public void InfrastructureRegistrationWithoutConfigurationKeepsPlatformBaseline()
+    {
+        ServiceCollection services = new();
+
+        services.AddDecisionForgeInfrastructure();
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        Assert.NotNull(provider.GetService<IIdGenerator>());
+        Assert.NotNull(provider.GetService<ICorrelationContextAccessor>());
+        Assert.NotNull(provider.GetService<TimeProvider>());
     }
 
     private sealed class FixedTimeProvider : TimeProvider

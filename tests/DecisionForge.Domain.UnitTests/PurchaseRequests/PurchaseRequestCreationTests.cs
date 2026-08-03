@@ -20,6 +20,7 @@ public sealed class PurchaseRequestCreationTests
         Assert.Equal("INR", request.Currency.Value);
         Assert.Equal(PurchaseRequestStatus.Draft, request.Status);
         Assert.Equal(Money.Zero(request.Currency), request.Total);
+        Assert.Equal(PurchaseRequestBuilder.Token(0), request.ConcurrencyToken);
         Assert.Empty(request.Items);
         ICollection<PurchaseRequestItem> exposedItems =
             Assert.IsAssignableFrom<ICollection<PurchaseRequestItem>>(request.Items);
@@ -51,6 +52,7 @@ public sealed class PurchaseRequestCreationTests
                 PurchaseRequestBuilder.DefaultRequesterId,
                 currency,
                 metadata,
+                PurchaseRequestBuilder.Token(0),
                 PurchaseRequestBuilder.DefaultTime));
         Assert.Throws<DomainRuleException>(
             () => new PurchaseRequestBuilder().WithRequester(Guid.Empty).Build());
@@ -61,6 +63,7 @@ public sealed class PurchaseRequestCreationTests
                 PurchaseRequestBuilder.DefaultRequesterId,
                 currency,
                 metadata,
+                PurchaseRequestBuilder.Token(0),
                 PurchaseRequestBuilder.DefaultTime));
         Assert.Throws<ArgumentNullException>(
             () => PurchaseRequest.Create(
@@ -69,6 +72,7 @@ public sealed class PurchaseRequestCreationTests
                 PurchaseRequestBuilder.DefaultRequesterId,
                 null!,
                 metadata,
+                PurchaseRequestBuilder.Token(0),
                 PurchaseRequestBuilder.DefaultTime));
         Assert.Throws<ArgumentNullException>(
             () => PurchaseRequest.Create(
@@ -76,6 +80,16 @@ public sealed class PurchaseRequestCreationTests
                 number,
                 PurchaseRequestBuilder.DefaultRequesterId,
                 currency,
+                null!,
+                PurchaseRequestBuilder.Token(0),
+                PurchaseRequestBuilder.DefaultTime));
+        Assert.Throws<ArgumentNullException>(
+            () => PurchaseRequest.Create(
+                PurchaseRequestBuilder.DefaultRequestId,
+                number,
+                PurchaseRequestBuilder.DefaultRequesterId,
+                currency,
+                metadata,
                 null!,
                 PurchaseRequestBuilder.DefaultTime));
         Assert.Throws<DomainRuleException>(
@@ -85,6 +99,7 @@ public sealed class PurchaseRequestCreationTests
                 PurchaseRequestBuilder.DefaultRequesterId,
                 currency,
                 metadata,
+                PurchaseRequestBuilder.Token(0),
                 PurchaseRequestBuilder.DefaultTime.ToOffset(TimeSpan.FromHours(1))));
     }
 

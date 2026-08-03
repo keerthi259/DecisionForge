@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
@@ -16,6 +17,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\DecisionForge.Api\DecisionForge.Api.csproj" />
     <ProjectReference Include="..\DecisionForge.Testing\DecisionForge.Testing.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Snapshots\openapi-v1.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

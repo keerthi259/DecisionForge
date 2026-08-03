@@ -1,7 +1,10 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using DecisionForge.Domain;
+using DecisionForge.Domain.Approvals;
 using DecisionForge.Domain.Common;
+using DecisionForge.Domain.Decisions;
+using DecisionForge.Domain.Policies.Lifecycle;
 using DecisionForge.Domain.PurchaseRequests;
 using DecisionForge.Domain.ReferenceData;
 using NetArchTest.Rules;
@@ -60,6 +63,12 @@ public sealed class DomainModelArchitectureTests
         Assert.True(typeof(PurchaseRequestItem).IsSealed);
         Assert.True(typeof(Department).IsSealed);
         Assert.True(typeof(Supplier).IsSealed);
+        Assert.True(typeof(Policy).IsSealed);
+        Assert.True(typeof(PolicyVersion).IsSealed);
+        Assert.True(typeof(Decision).IsSealed);
+        Assert.True(typeof(RuleEvaluation).IsSealed);
+        Assert.True(typeof(ApprovalWorkflow).IsSealed);
+        Assert.True(typeof(ApprovalStage).IsSealed);
     }
 
     [Fact]

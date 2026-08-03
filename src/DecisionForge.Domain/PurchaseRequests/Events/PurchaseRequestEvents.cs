@@ -1,10 +1,18 @@
+using DecisionForge.Domain.Approvals;
 using DecisionForge.Domain.Common;
+using DecisionForge.Domain.Enums;
 using DecisionForge.Domain.ValueObjects;
 
 namespace DecisionForge.Domain.PurchaseRequests.Events;
 
 public sealed record PurchaseRequestCreatedDomainEvent(
     Guid PurchaseRequestId,
+    Guid RequesterId,
+    DateTimeOffset OccurredAt) : IDomainEvent;
+
+public sealed record PurchaseRequestClonedDomainEvent(
+    Guid PurchaseRequestId,
+    Guid SourcePurchaseRequestId,
     Guid RequesterId,
     DateTimeOffset OccurredAt) : IDomainEvent;
 
@@ -40,6 +48,14 @@ public sealed record PurchaseRequestSubmittedDomainEvent(
 
 public sealed record PurchaseRequestEvaluationStartedDomainEvent(
     Guid PurchaseRequestId,
+    Guid PolicyId,
+    Guid PolicyVersionId,
+    PolicyChecksum PolicyChecksum,
+    DateTimeOffset OccurredAt) : IDomainEvent;
+
+public sealed record PurchaseRequestEvaluationCompletedDomainEvent(
+    Guid PurchaseRequestId,
+    DecisionDisposition Disposition,
     DateTimeOffset OccurredAt) : IDomainEvent;
 
 public sealed record PurchaseRequestEvaluationFailedDomainEvent(
@@ -53,4 +69,10 @@ public sealed record PurchaseRequestEvaluationRetriedDomainEvent(
 
 public sealed record PurchaseRequestWithdrawnDomainEvent(
     Guid PurchaseRequestId,
+    DateTimeOffset OccurredAt) : IDomainEvent;
+
+public sealed record PurchaseRequestApprovalCompletedDomainEvent(
+    Guid PurchaseRequestId,
+    Guid ApprovalWorkflowId,
+    ApprovalOutcome Outcome,
     DateTimeOffset OccurredAt) : IDomainEvent;

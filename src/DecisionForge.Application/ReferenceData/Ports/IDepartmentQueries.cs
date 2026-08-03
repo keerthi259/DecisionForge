@@ -6,10 +6,15 @@ public sealed record DepartmentLookup(
     Guid Id,
     DepartmentCode Code,
     string Name,
-    Money AutoApprovalLimit);
+    Money AutoApprovalLimit,
+    bool IsActive);
 
 public interface IDepartmentQueries
 {
+    Task<DepartmentLookup?> FindByIdAsync(
+        Guid id,
+        CancellationToken cancellationToken);
+
     Task<DepartmentLookup?> FindActiveByIdAsync(
         Guid id,
         CancellationToken cancellationToken);

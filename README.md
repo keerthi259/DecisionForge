@@ -5,11 +5,11 @@ target workflow evaluates a purchase request against an immutable, versioned
 policy, records rule-level evidence, and creates an ordered approval workflow
 when manual review is required.
 
-> Current state: Phase 7 adds deterministic typed policy evaluation, complete
-> rule/condition/fact-access traces, precedence and ordered de-duplication,
-> immutable results, cancellation and execution guards, and reproducible input
-> and trace SHA-256 checksums. Policy lifecycle, persistence, business APIs,
-> authentication, and deployment are not implemented.
+> Current state: Phase 14 adds versioned API grouping, safe problem details,
+> field/business validation mapping, bounded allow-listed list queries, strong
+> ETags, authenticated idempotency middleware, body/CORS/header/rate controls,
+> OpenAPI 3.1 contract snapshots and spreadsheet-safe CSV encoding. Business
+> APIs and the Phase 15 reviewed production migration are not implemented.
 
 The authoritative implementation specification is [spec.md](spec.md). It
 defines the complete scope, architecture, security boundaries, quality gates,
@@ -26,13 +26,13 @@ and 24-phase Atomic Task Graph.
 | 5 | Reference data and evaluation facts | Complete | `docs/evidence/phase-05-reference-data.md` |
 | 6 | Policy JSON contract and validation | Complete | `docs/evidence/phase-06-policy-json.md` |
 | 7 | Deterministic policy engine | Complete | `docs/evidence/phase-07-policy-engine.md` |
-| 8 | Policy lifecycle and versioning | Not started | None |
-| 9 | Purchase-request application lifecycle | Not started | None |
-| 10 | Decision orchestration and reproduction | Not started | None |
-| 11 | Approval workflow | Not started | None |
-| 12 | Audit, outbox and notifications | Not started | None |
-| 13 | Identity and resource authorization | Not started | None |
-| 14 | API foundation and cross-cutting behaviour | Not started | None |
+| 8 | Policy lifecycle and versioning | Complete | `docs/evidence/phase-08-policy-lifecycle.md` |
+| 9 | Purchase-request application lifecycle | Complete | `docs/evidence/phase-09-request-lifecycle.md` |
+| 10 | Decision orchestration and reproduction | Complete | `docs/evidence/phase-10-decision-orchestration.md` |
+| 11 | Approval workflow | Complete | `docs/evidence/phase-11-approval-workflow.md` |
+| 12 | Audit, outbox and notifications | Complete | `docs/evidence/phase-12-audit-outbox-notifications.md` |
+| 13 | Identity and resource authorization | Complete | `docs/evidence/phase-13-identity-authorization.md` |
+| 14 | API foundation and cross-cutting behaviour | Complete | `docs/evidence/phase-14-api-foundation.md` |
 | 15 | PostgreSQL persistence and business APIs | Not started | None |
 | 16 | Simulation, dashboard and exports | Not started | None |
 | 17 | Frontend foundation and authentication | Not started | None |
@@ -86,6 +86,23 @@ documented in [docs/architecture/domain-model.md](docs/architecture/domain-model
 The supported policy shape, limits, schema-version policy and canonical form
 are documented in
 [docs/architecture/policy-contract.md](docs/architecture/policy-contract.md).
+Policy lifecycle, effective-range and comparison behavior are documented in
+[docs/architecture/policy-lifecycle.md](docs/architecture/policy-lifecycle.md).
+The trusted request application boundary, pagination, cloning, preconditions
+and idempotency semantics are documented in
+[docs/architecture/purchase-request-application-lifecycle.md](docs/architecture/purchase-request-application-lifecycle.md).
+Decision selection, atomic commit, retry, explanation and reproduction are
+documented in
+[docs/architecture/decision-orchestration.md](docs/architecture/decision-orchestration.md).
+Approval ordering, authorization ports, action concurrency and override
+semantics are documented in
+[docs/architecture/approval-workflow.md](docs/architecture/approval-workflow.md).
+Audit canonicalization, transactional outbox behavior and notification delivery
+are documented in
+[docs/architecture/audit-outbox-notifications.md](docs/architecture/audit-outbox-notifications.md).
+Identity persistence, cookie/antiforgery boundaries and the resource policy
+matrix are documented in
+[docs/architecture/identity-and-authorization.md](docs/architecture/identity-and-authorization.md).
 
 ## Build and test
 
